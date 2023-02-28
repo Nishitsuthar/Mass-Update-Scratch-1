@@ -155,7 +155,8 @@ export default class new_upload_btn extends LightningElement {
                 let rowObject = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName], { defval: "" });
                 console.log('data of rowobject==>' + JSON.stringify(rowObject));
                 var data1 = Papa.parse(rowObject, {
-                    header: true
+                    header: true,
+                    skipEmptyLines: 'greedy'
                 });
                 console.log('data1 ' + JSON.stringify(data1));
                 // var headerValue = Object.keys(rowObject[0]);
@@ -187,12 +188,13 @@ export default class new_upload_btn extends LightningElement {
         Papa.parse(file, {
             quoteChar: '"',
             header: 'true',
+            skipEmptyLines: 'greedy', // Add this line to skip empty lines
             complete: (results) => {
                 this._rows = results.data;
-                console.log('results ', JSON.stringify(results));
+                console.log('results ', JSON.parse(JSON.stringify(results)));
                 this.loading = false;
                 let rowObj = results.data;
-                console.log('rowobjec==>' + JSON.stringify(rowObj));
+                console.log('rowobjec==>' + JSON.parse(JSON.stringify(rowObj)));
                 let headerName = results.meta.fields;
                 this.headerCheck(headerName);
                 this.dataStoreTable(rowObj);
@@ -204,6 +206,7 @@ export default class new_upload_btn extends LightningElement {
             }
         })
     }
+
     headerCheck(headerName) {
         var trimrow = headerName;
         console.log("trimRow=====" + trimrow);
