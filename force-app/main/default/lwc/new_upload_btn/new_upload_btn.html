@@ -1,0 +1,17 @@
+<template>
+    <div style="display: flex; align-items: center;">
+        <lightning-input type="file" multiple="false" label="Please upload file (LWC)" accept={acceptedFormats}
+            onchange={handleUploadFinished}></lightning-input>
+            <iframe src="/apex/DropBoxButton" height="30px" width="30px" class="dropbox" frameborder="0" ></iframe>
+    </div>
+    <div class="slds-m-top_medium">
+        <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" id="progress-bar-label-id-6">
+            <span>{fileName}</span>
+            <span aria-hidden="true">
+                <strong>{progress}% Complete</strong>
+            </span>
+        </div>
+        <lightning-progress-bar value={progress} variant="circular"></lightning-progress-bar>
+
+    </div>
+</template>

@@ -23,9 +23,9 @@
 
     <!-- jenish ganganai 2/2/23 -->
     <aura:attribute name="apiListofObject" type="object[]" />
-    <aura:attribute name="progress" type="Integer" default="0"/>
+    <aura:attribute name="progress" type="Integer" />
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
-    <aura:attribute name="operation" type="String" default="choose one..." />  
+    <aura:attribute name="operation" type="String" />  
      <!-- jenish gangani 2/2/23 -->
 
     <aura:attribute name="allDataList" type="object[]" />
@@ -60,6 +60,10 @@
           <!-- jenish gangani 7/2/23 -->
     <aura:handler name="disableNextButton" event="c:disableButtonEvent" action="{!c.handleNextButton}" />
           <!-- jenish gangani 7/2/23 -->
+
+          <!-- jenish gangani 22/2 -->
+
+          <!-- jenish gangani 22/2 -->
 
     
     <aura:if isTrue="{!v.finished == false}">
@@ -177,27 +181,31 @@
                             </aura:if>
                         </div>
                         <div class="slds-p-around_medium" style="width:70%;margin-left:15%;">
-
+                            
                             <!-- jenish gangani 8/2/23 -->
                             <div class="slds-float_right slds-col">
                                 <lightning:helptext content="Select your Operation."/>
                             </div>
-                            <lightning:select aura:id="select" name="select" label="Select a operation:" onchange="{! c.onChange }">
+                            <lightning:select aura:id="select" name="select" label="Select a operation:" value="{!v.operation}" onchange="{! c.onChange }">
                                 <!-- required="true" -->
                                         <option value="">choose one...</option>
                                         <option value="insert">insert</option>
                                         <option value="update">update</option>
                                         </lightning:select>
                                     <br/>
+
+                            <!--* Nishit Suthar 20/02/23 : Added new LWC Component -->
+                            <c:new_upload_btn onfilevalue="{!c.handlefileValue}" fileName="{!v.fileName}" progress='{!v.progress}' onpassvalue="{!c.handleNextButton}" onheader="{!c.handleHeader}" ontabledata="{!c.handleTableData}"/>
+                            
                              <!-- jenish gangani 8/2/23  -->
-                            <c:importCsvFile  header="{!v.header}" tabledata="{!v.tabledata}"  progress="{!v.progress}" fileName ="{!v.fileName}"/>
+                            <!-- <c:importCsvFile   header="{!v.header}" tabledata="{!v.tabledata}"  progress="{!v.progress}" fileName ="{!v.fileName}"/> -->
                             <!-- <lightning:fileUpload aura:id = "file"
                                     onuploadfinished="{!c.showcsvdata}"
                                     name = "file"
                                     accept = ".csv"
                                     label = "Please upload file"
                                     multiple = "false" /> -->
-                                        
+                                 
                             <br/>
                             
                             <div class="slds-float_right slds-col">
@@ -507,6 +515,9 @@
                                 <lightning:button variant="brand" value="{!v.currentStep}" label="Previous" title="Previous" onclick="{! c.PreviousStep2 }" /> 
                                 <aura:if isTrue="{!greaterthan(v.sfId,0)}">
                                     <lightning:button variant="brand" value="{!v.currentStep}" label="Update" title="Update" onclick="{! c.saveRecordsToSF }"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.operation=='insert'}">
+                                    <lightning:button variant="brand" value="{!v.currentStep}" label="insert" title="insert" onclick="{! c.saveRecordsToSFForInsert }"/>
                                 </aura:if>
                             </div>
                         </div>

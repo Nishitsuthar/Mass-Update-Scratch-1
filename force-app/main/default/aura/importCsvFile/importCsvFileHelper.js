@@ -1,5 +1,5 @@
 ({
-	showToast : function(type, title, message) {
+    showToast: function (type, title, message) {
         var toastEvent = $A.get("e.force:showToast");
         toastEvent.setParams({
             "type": type,

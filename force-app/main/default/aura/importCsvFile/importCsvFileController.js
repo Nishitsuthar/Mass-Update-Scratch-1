@@ -12,6 +12,7 @@
             var fName = event.getSource().get("v.files")[0]["name"];
         }
 
+
         if (fName.indexOf(".csv") !== -1) {
             console.log("fileName=====" + fileName);
 
@@ -25,7 +26,9 @@
                 reader.readAsText(file, "UTF-8");
                 reader.onload = function (evt) {
                     var csv = evt.target.result;
+                    console.log('typeof csvf::' + typeof (csv));
                     console.log("csv:::" + csv);
+                    console.log('csv length===', csv.length);
                     if (csv.length > 4000000) {
                         helper.showToast(
                             "Info",
@@ -45,22 +48,7 @@
                         console.log('trimrow' + trimrow.length);
                         trimrow[trimrow.length - 1] = trimrow[trimrow.length - 1].replace(/(\r\n|\n|\r)/gm, "");
                         console.log('trimrow value:::', { trimrow });
-                        // console.log('trimrow value:::', isEmpty(trimrow[i]));
-                        // trimrow.include('')
-                        // let haystack = ["12345", "hello", "world"];
-                        // let needle = ["world", "banana"];
 
-                        // let result = needle.some(i => haystack.includes(i));
-
-                        // console.log(result); // Output = true
-
-                        // --------------------------------------------------jenish gangani5/2/23
-                        // https://stackoverflow.com/questions/19325430/remove-double-quotes-from-the-strings-present-inside-the-arrays-using-javascript
-                        // var array = ["apple","orange","pear"];
-                        // let stringArray = ['"string1"', '"string2"', '"string3"'];
-                        // let newArray = stringArray.map(str => str.replace(/"/, ''));
-                        // let z = {trimrow};
-                        // console.log('z:::'+ z);
                         let newArray = trimrow.map(str => str.replace('"', ''));
                         let newArray1 = newArray.map(str => str.replace('"', ''));
                         let newArray2 = newArray1.map(str => str.replace(/\s/g, ''));
@@ -69,6 +57,7 @@
                         // console.log('string::::'+ array);
                         trimrow = newArray2;
                         console.log('new open :::' + trimrow);
+                        console.log('type of ' + typeof (trimrow));
                         component.set("v.header", trimrow);
 
                         // --------------------------------------------------jenish gangani5/2/23
@@ -133,6 +122,8 @@
                         component.set("v.tabledata", tabledata);
                         console.log("tableData====" + tabledata.length);
                         console.log("tableData::::" + tabledata);
+                        console.log("tableData type of ::::" + typeof (tabledata));
+
                         var fileName = fName;
                         component.set("v.fileName", fileName);
                         console.log("file Name After===" + fileName);
@@ -142,7 +133,12 @@
         } else {
             helper.showToast("Info", "Info!", "Please upload only CSV file");
         }
-    }
+    },
+
+
+
+
+
 });
 
 // ({

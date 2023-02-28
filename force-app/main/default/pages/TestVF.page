@@ -1,0 +1,176 @@
+<apex:page sidebar="false" showHeader="false" >
+    
+    <html>
+        <body>
+            
+            <script src="https://apis.google.com/js/api.js"></script>
+            <script>
+                /**
+               * Sample JavaScript code for drive.files.list
+               * See instructions for running APIs Explorer code samples locally:
+               * https://developers.google.com/explorer-help/code-samples#javascript
+               */
+               
+            var resFiles = '';
+            var accessToken = '';
+            
+            gapi.load("client:auth2", function() {
+                gapi.auth2.init({client_id: "816521585707-lvdkgvro4cmi69rnuu2308p7hkbqoeg4.apps.googleusercontent.com",plugin_name: "hello"});
+            
+            });
+           	function authenticate() {
+                return gapi.auth2.getAuthInstance()
+                .signIn({scope: "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.appdata https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.metadata https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/drive.photos.readonly https://www.googleapis.com/auth/drive.readonly"})
+                // .then(function() { 
+                //     console.log("Sign-in successful"); 
+                //     return gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse();
+                // }).then(function(response) {
+                //     // Use the access token to make requests to the Google API
+                //     accessToken = response.access_token;
+                //     console.log('accessToken 30==',accessToken);
+                //     // ...
+                // },
+                .then(function() { 
+                    console.log("Sign-in successful"); 
+                },
+                    function(err) { console.error("Error signing in", err); });
+            }
+            
+            
+            function loadClient() {
+                gapi.client.setApiKey("AIzaSyDYiocNeen_vyPPA8Au3gnPdrhpcxupQlM");
+                return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
+                .then(function() { 
+                    console.log("GAPI client loaded for API"); 
+                	execute();
+                },
+                function(err) { console.error("Error loading GAPI client for API", err); });
+            }
+            
+            
+            
+            // Make sure the client is loaded and sign-in is complete before calling this method.
+          
+            // var params = {
+            //   'pageSize': 10, // Number of files to retrieve per page
+            //   'fields': 'nextPageToken, files(id, name, createdTime, modifiedTime, owners)' // Specify the fields to retrieve for each file
+            // };
+            
+            
+            //to get the list of files exists in Google Drive
+            function execute() {
+                return gapi.client.drive.files.list({q: "mimeType='text/csv'",fields: 'nextPageToken, files(id, name, createdTime, modifiedTime, owners)'})
+                .then(function(response) {
+                    // Handle the results here (response.result has the parsed body).
+                    console.log("Response", response);
+                    resFiles = response;
+                   	console.log(typeof resFiles );
+                    sendToLWC(resFiles);
+                },
+                function(err) { console.error("Execute error", err); });    
+            }
+            
+            
+            
+            // gapi.load("client:auth2", function() {
+            //     gapi.auth2.init({client_id: "816521585707-lvdkgvro4cmi69rnuu2308p7hkbqoeg4.apps.googleusercontent.com",plugin_name: "hello"});
+            //     return gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse()
+            //     .then(function(response) {
+            //         console.log('success 2');
+            //         // Use the access token to make requests to the Google API
+            //         accessToken = response.access_token;
+            //     })
+            // });
+         
+            
+            
+            
+            
+            console.log('resFiles--',resFiles);
+            var lexOrigin="https://power-drive-2498-dev-ed.scratch.lightning.force.com";
+            
+            //Passing Data from VF to LWC
+            function sendToLWC(resFiles) {
+                console.log('sendToLWC==', resFiles.result);
+                console.log('sendToLWC==', resFiles.result.files);
+                var payload =  resFiles.result.files;
+                var message = {
+                    name:"SendingListOfFiles",
+                    payload:payload
+                };
+                parent.postMessage(message,lexOrigin);
+             }
+            //End of Passing Data from VF to LWC
+            
+            
+            
+            
+            //Getting selected file data from LWC 
+             window.addEventListener("message",function(event){
+                 console.log('LWC origin==',event);                 
+                 console.log('LWC origin==',event.origin);
+                 console.log('lexOrigin==',lexOrigin);
+                if(event.origin !== lexOrigin){
+                    console.log('URL not Matching');
+                    //Not the expected origin
+                    return;
+                }else{
+	                console.log('data from LWC===',event.data.fileId );
+                   getFileData(event.data.fileId);
+                }
+
+            },false);
+            //End of getting data from LWC
+	
+            //Function to get the selected File data
+            function getFileData(fileId){
+                console.log('getFileData called==');
+                console.log('accessToken+++',accessToken);
+                var googleSelectedFiles = new Array();
+                var request =
+                    gapi.client.request({
+                        'path': '/drive/v3/files/' + fileId,
+                        'method': 'GET',
+                        'params': { 'maxResults': '1000' },
+                        callback: function (responsejs, responsetxt) {
+                            var fileDownloadUrl = responsejs.downloadUrl; //using this downloadUrl you will be able to download Drive File Successfully
+                            console.log('fileDownloadUrl=='+fileDownloadUrl);
+                            
+                            
+                            var gDoxBlob = null;
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("GET", fileDownloadUrl, true); //file.url
+                            
+                            // var accessToken = access_token;
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                            
+                            xhr.responseType = "text";
+                            xhr.onload = function () {
+                                
+                                gDoxBlob = xhr.response;
+                                console.log('gDoxBlob==');
+                                console.log({gDoxBlob});
+                                             //googleSelectedFiles.push({ bytes: gDoxBlob, name: fileName });
+                            }
+                            xhr.onerror = function() {
+                                callback(null);
+                            };
+                            xhr.send();
+                        }
+                    });
+            }            
+            </script>
+            
+
+            
+           
+            <button onclick="authenticate().then(loadClient())">Google Drive</button>
+            <!--x<button onclick="sendToLWC()">sendToLWC</button>-->
+			
+           
+        </body>
+        
+    </html>
+    
+    
+</apex:page>

@@ -1,0 +1,226 @@
+<apex:page sidebar="false" showHeader="false">
+<html>
+<head>
+  <title>Picker API Quickstart</title>
+  <meta charset="utf-8" />
+</head>
+<body>
+<p>Picker API API Quickstart</p>
+
+<!--Add buttons to initiate auth sequence and sign out-->
+<button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+<button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+    <input type="button" id="authorize_button" onclick="handleAuthClick()" value="Authorize"/>
+    <input type="button" id="signout_button" onclick="handleSignoutClick()" value="Sign Out"/>
+<pre id="content" style="white-space: pre-wrap;"></pre>
+
+<script type="text/javascript">
+  /* exported gapiLoaded */
+  /* exported gisLoaded */
+  /* exported handleAuthClick */
+  /* exported handleSignoutClick */
+
+  // Authorization scopes required by the API; multiple scopes can be
+  // included, separated by spaces.
+  const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+    //      const SCOPES = 'https://www.googleapis.com/auth/drive';
+
+  // TODO(developer): Set to client ID and API key from the Developer Console
+//const CLIENT_ID = '743502205155-0empokv5a49fdhtf7lm38ucsk0d0eup6'; 
+  const CLIENT_ID = '816521585707-lvdkgvro4cmi69rnuu2308p7hkbqoeg4.apps.googleusercontent.com';
+  //const API_KEY = 'AIzaSyDpqfCp4v5Ykc201OEUgscQPsZkKAtGRIQ';
+  const API_KEY = 'AIzaSyDYiocNeen_vyPPA8Au3gnPdrhpcxupQlM';
+
+  // TODO(developer): Replace with your own project number from console.developers.google.com.
+  const APP_ID = '816521585707-lvdkgvro4cmi69rnuu2308p7hkbqoeg4.apps.googleusercontent.com';
+
+  let tokenClient;
+  let accessToken = null;
+  let pickerInited = false;
+  let gisInited = false;
+
+
+  document.getElementById('authorize_button').style.visibility = 'hidden';
+  document.getElementById('signout_button').style.visibility = 'hidden';
+
+  /**
+   * Callback after api.js is loaded.
+   */
+  function gapiLoaded() {
+    gapi.load('client:picker', initializePicker);
+  }
+
+  /**
+   * Callback after the API client is loaded. Loads the
+   * discovery doc to initialize the API.
+   */
+  async function initializePicker() {
+    await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+    pickerInited = true;
+    maybeEnableButtons();
+  }
+
+  /**
+   * Callback after Google Identity Services are loaded.
+   */
+  function gisLoaded() {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: '', // defined later
+    });
+    gisInited = true;
+    maybeEnableButtons();
+  }
+
+  /**
+   * Enables user interaction after all libraries are loaded.
+   */
+  function maybeEnableButtons() {
+    if (pickerInited && gisInited) {
+      document.getElementById('authorize_button').style.visibility = 'visible';
+    }
+  }
+
+  /**
+   *  Sign in the user upon button click.
+   */
+  function handleAuthClick() {
+    tokenClient.callback = async (response) => {
+      if (response.error !== undefined) {
+        throw (response);
+      }
+      accessToken = response.access_token;
+      document.getElementById('signout_button').style.visibility = 'visible';
+      document.getElementById('authorize_button').innerText = 'Refresh';
+      await createPicker();
+    };
+
+    if (accessToken === null) {
+      // Prompt the user to select a Google Account and ask for consent to share their data
+      // when establishing a new session.
+      tokenClient.requestAccessToken({prompt: 'consent'});
+    } else {
+      // Skip display of account chooser and consent dialog for an existing session.
+      tokenClient.requestAccessToken({prompt: ''});
+    }
+  }
+
+  /**
+   *  Sign out the user upon button click.
+   */
+  function handleSignoutClick() {
+    if (accessToken) {
+      accessToken = null;
+      google.accounts.oauth2.revoke(accessToken);
+      document.getElementById('content').innerText = '';
+      document.getElementById('authorize_button').innerText = 'Authorize';
+      document.getElementById('signout_button').style.visibility = 'hidden';
+    }
+  }
+
+  /**
+   *  Create and render a Picker object for searching images.
+   */
+  function createPicker() {
+       const view = new google.picker.View(google.picker.ViewId.SPREADSHEETS  );
+      //const view = new google.picker.View(google.picker.ViewId.DOCS  );
+      //view.setMimeTypes('text/csv');
+    const picker = new google.picker.PickerBuilder()
+        .enableFeature(google.picker.Feature.NAV_HIDDEN)
+        .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+        .setDeveloperKey(API_KEY)
+        .setAppId(APP_ID)
+        .setOAuthToken(accessToken)
+        .addView(view)
+        .addView(new google.picker.DocsUploadView())
+        .setCallback(pickerCallback)
+        .build();
+    picker.setVisible(true);
+  }
+
+  /**
+   * Displays the file details of the user's selection.
+   * @param {object} data - Containers the user selection from the picker
+   */
+  async function pickerCallback(data) {
+      console.log('data=='+data);
+      console.log({data});
+      console.log('google.picker.Action.PICKED==='+google.picker.Action.PICKED);
+    if (data.action === google.picker.Action.PICKED) {
+      let text = `Picker response: \n${JSON.stringify(data, null, 2)}\n`;
+      const document = data[google.picker.Response.DOCUMENTS][0];
+      var fileId = document[google.picker.Document.ID];
+      var fileName = document[google.picker.Document.NAME];                  
+      var MIME_TYPE = document[google.picker.Document.MIME_TYPE];
+      console.log('filename=='+document[google.picker.Document.NAME]);
+                  
+      console.log(fileId);
+      const res = await gapi.client.drive.files.get({
+        'fileId': fileId,
+        'fields': '*',
+          // 'alt': 'media'
+      });
+      text += `Drive API response for first document: \n${JSON.stringify(res.result, null, 2)}\n`;
+      window.document.getElementById('content').innerText = text;
+      console.log('fileId=='+fileId)
+      // await getDownloadurl(fileId);
+      //download the file
+      var googleSelectedFiles = new Array();
+      var request =
+                gapi.client.request({
+                    'path': '/drive/v2/files/' + fileId,
+                    'method': 'GET',
+                    'params': { 'maxResults': '1000' },
+                    callback: function (responsejs, responsetxt) {
+                        var fileDownloadUrl = responsejs.downloadUrl; //using this downloadUrl you will be able to download Drive File Successfully
+                        console.log('fileDownloadUrl=='+fileDownloadUrl);
+                        
+                        var gDoxBlob = null;
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("GET", fileDownloadUrl); //file.url
+        
+                        // var accessToken = access_token;
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+        
+                        xhr.responseType = "text";
+                        xhr.onload = function () {
+        
+                            gDoxBlob = xhr.response;
+                            console.log('gDoxBlob==');
+                            console.log({gDoxBlob});
+                            googleSelectedFiles.push({ bytes: gDoxBlob, name: fileName });
+                        }
+                        xhr.onerror = function() {
+                          callback(null);
+                        };
+                        xhr.send();
+                    }
+                });
+      
+    }
+  }
+  
+  /*  async function getDownloadUrl(fileId) {
+      console.log('getDownloadUrl==');
+            /*Before executing following client request you must include
+               
+            google client library
+
+       var request =
+                gapi.client.request({
+                    'path': '/drive/v2/files/' + fileId,
+                    'params': { 'maxResults': '1000' },
+                    callback: function (responsejs, responsetxt) {
+                            var fileDownloadUrl = responsejs.downloadUrl; //using this downloadUrl you will be able to download Drive File Successfully
+                        console.log('fileDownloadUrl=='+fileDownloadUrl);
+                    }
+                });
+    }*/
+</script>
+<script async="true" defer="true" src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script async="true" defer="true" src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+</body>
+</html>
+</apex:page>
