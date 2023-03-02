@@ -60,7 +60,7 @@ public with sharing class updateFieldsController {
                 if(field.apiName == 'Id'){
                     lstfieldname.add(field);
                 // }else if(dfield.isUpdateable() == true &&  dfield.getType() != Schema.DisplayType.DATETIME && dfield.getType() != Schema.DisplayType.TIME){
-                }else if(dfield.isUpdateable() == true && dfield.getType() != Schema.DisplayType.TIME){
+                }else if(dfield.isUpdateable() == true){
                     lstfieldname.add(field);
                 }
             }
@@ -618,8 +618,8 @@ public with sharing class updateFieldsController {
                             }
                             else if(fielddataType == Schema.DisplayType.DATE){
                                 try{ 
-                                    System.debug('619==>date filed ===>'+ addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim());
-                                    System.debug('620==>date filed ===>'+ addMap.get('CSV'+field.csvfield).trim());
+                                    // System.debug('619==>date filed ===>'+ addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim());
+                                    // System.debug('620==>date filed ===>'+ addMap.get('CSV'+field.csvfield).trim());
                                     sobj.put(field.SObjectField, date.parse(addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim()));  
                                     // string w =  (addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim()) ;
                                     // System.debug('w== 623==>'+ w);
@@ -651,8 +651,24 @@ public with sharing class updateFieldsController {
                                 //    String isoTimestamp = '2023-02-12T05:20:52.000Z';
                                 //    String isoTimestamp = addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim();
                                 //    String timestampWithoutFraction = isoTimestamp.substring(0, 19);
+                                        // String userInput = '2019-01-03';
+                                        // Time defaultTime = Time.newInstance(0, 0, 0, 0); // default time is midnight
+                                        // Datetime myDateTime;
+                                        // DateTime.newInstance(tetsdate, Time.newInstance(12, 0, 0, 0));
 
-                                  
+//                                         if (!userInput.matches('^\\d{4}-\\d{2}-\\d{2}$')) {
+//                                             // user input contains a date and time
+//                                             try {
+//                                                 myDateTime = Datetime.valueOf(userInput);
+//                                             } catch (TypeException e) {
+//                                                                                         // h                                        andle invalid user input
+//                                             }
+//                                             } else {
+//                                             // user input contains only a date, add default time
+//                                             myDateTime = Datetime.newInstance(Date.valueOf(userInput), defaultTime);
+//                                         }
+
+// System.debug(myDateTime);
                                      sobj.put(field.SObjectField, (DateTime)JSON.deserialize('"' + ((addMap.get('CSV'+field.csvfield).trim()).substringBefore('.') + '.000-00:00') + '"', DateTime.class)); 
                                     //  sobj.put(field.SObjectField, DateTime.parse(addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim())); 
                                 } catch (Exception e) {
@@ -663,7 +679,12 @@ public with sharing class updateFieldsController {
                                 // sobj.put(field.SObjectField, DATETIME.valueof(lstStr.get(listCSv)));  
                             }
                             else if(fielddataType == Schema.DisplayType.TIME){
-                                sobj.put(field.SObjectField, addMap.get('CSV'+field.csvfield).trim());  
+                                  String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
+                                  Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
+                                                                     ,Integer.valueOf(strTimeSplit[1]) //min
+                                                                     ,0                                //sec
+                                                                     ,0); 
+                                sobj.put(field.SObjectField, timeChange);  
                             }
                             else if(fielddataType == Schema.DisplayType.Boolean){
                                 sobj.put(field.SObjectField, Boolean.valueof(addMap.get('CSV'+field.csvfield).trim()));  
@@ -724,7 +745,19 @@ public with sharing class updateFieldsController {
                                 // sobj.put(field.SObjectField, DATETIME.valueof(lstStr.get(listCSv)));  
                             }
                             else if(fielddataType == Schema.DisplayType.TIME){
-                                sobj.put(field.SObjectField, addMap.get('CSV'+field.csvfield).trim());  
+                                // ---- jenish gangani for convert time 2/3/23
+                                try {
+                                      String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
+                                  Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
+                                                                     ,Integer.valueOf(strTimeSplit[1]) //min
+                                                                     ,0                                //sec
+                                                                     ,0); 
+                                sobj.put(field.SObjectField, timeChange); 
+                                } catch (Exception e) {
+                                    System.debug('Error for Time '+ e.getMessage());
+                                } 
+                                // ---- jenish gangani for convert time 2/3/23
+                                    
                             }
                             else if(fielddataType == Schema.DisplayType.Boolean){
                                 sobj.put(field.SObjectField, Boolean.valueof(addMap.get('CSV'+field.csvfield).trim()));  
@@ -841,6 +874,24 @@ public class pairWrapper1{
         }
     }
 
-    // ---------jenish gangani 9/2/23
+    // ---------jenish gangani 2/3/23
+    @AuraEnabled
+    public static Void sendemail(String name, String email, String subject, String body){
+        try {
+            List<Messaging.SingleEmailMessage> emailList = new List<Messaging.SingleEmailMessage>();
+            List<String> address = new List<String>{'ritu.p@mvclouds.com'};
+                
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+            System.debug('mail :'+ mail);
+            mail.setSubject(subject);
+            mail.setplaintextbody(body+'\n\n\nFrom '+name +'\nEmail '+email);
+            mail.setToAddresses(address);
+            emailList.add(mail);
+            System.debug('emailList :'+emailList);
+            Messaging.sendEmail(emailList);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
     // ---------jenish gangani 9/2/23
 }

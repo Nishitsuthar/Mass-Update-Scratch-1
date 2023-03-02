@@ -164,21 +164,23 @@
                     <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
                         <div class="slds-float_right" style="margin-right:1%">
                             <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
-                                <a>Help?</a>
+                                <!-- <a>Help?<c:quickBot/></a> -->
+                                    <a onclick="{!c.handleButtonClick}">Help?</a>
+                                    <aura:html tag="div" aura:id="lwcContainer" />
                             </div>
                             <br/>
-                            <aura:if isTrue="{!v.selectObjectHelp}">
-                                <br/>
-                                <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog">
+                            <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
+                                <!-- <br/> -->
+                                <!-- <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog"> -->
                                     
                                     <!-- <header class="slds-popover__header">
                                     <h2 class="slds-text-heading_small" id="dialog-heading-id-106">Help</h2>
                                     </header> -->
-                                    <div class="slds-popover__body" id="dialog-body-id-101">
-                                    <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p>
-                                    </div>
-                                </section>
-                            </aura:if>
+                                    <!-- <div class="slds-popover__body" id="dialog-body-id-101"> -->
+                                    <!-- <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p> -->
+                                    <!-- </div> -->
+                                <!-- </section> -->
+                            <!-- </aura:if> -->
                         </div>
                         <div class="slds-p-around_medium" style="width:70%;margin-left:15%;">
                             
@@ -250,21 +252,23 @@
                 <lightning:card>
                     <div class="slds-float_right" style="margin-right:1%">
                         <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
-                            <a>Help?</a>
+                            <!-- <a>Help?</a> -->
+                            <a onclick="{!c.handleButtonClick}">Help?</a>
+                                    <aura:html tag="div" aura:id="lwcContainer" />
                         </div>
                         <br/>
-                        <aura:if isTrue="{!v.selectObjectHelp}">
-                            <br/>
-                            <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog">
+                        <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
+                            <!-- <br/> -->
+                            <!-- <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog"> -->
                                 
                                 <!-- <header class="slds-popover__header">
                                 <h2 class="slds-text-heading_small" id="dialog-heading-id-106">Help</h2>
                                 </header> -->
-                                <div class="slds-popover__body" id="dialog-body-id-101">
-                                <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p>
-                                </div>
-                            </section>
-                        </aura:if>
+                                <!-- <div class="slds-popover__body" id="dialog-body-id-101"> -->
+                                <!-- <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p> -->
+                                <!-- </div> -->
+                            <!-- </section> -->
+                        <!-- </aura:if> -->
                     </div>
 
                     <!-- 8/2/23   jenish ganagani -->
@@ -514,10 +518,10 @@
                             <div class="slds-float_right" style="display:inline-block;">      
                                 <lightning:button variant="brand" value="{!v.currentStep}" label="Previous" title="Previous" onclick="{! c.PreviousStep2 }" /> 
                                 <aura:if isTrue="{!greaterthan(v.sfId,0)}">
-                                    <lightning:button variant="brand" value="{!v.currentStep}" label="Update" title="Update" onclick="{! c.saveRecordsToSF }"/>
+                                    <lightning:button disabled="{!v.stepOneNextButton}" variant="brand" value="{!v.currentStep}" label="Update" title="Update" onclick="{! c.saveRecordsToSF }"/>
                                 </aura:if>
                                 <aura:if isTrue="{!v.operation=='insert'}">
-                                    <lightning:button variant="brand" value="{!v.currentStep}" label="insert" title="insert" onclick="{! c.saveRecordsToSFForInsert }"/>
+                                    <lightning:button disabled="{!v.stepOneNextButton}" variant="brand" value="{!v.currentStep}" label="insert" title="insert" onclick="{! c.saveRecordsToSFForInsert }"/>
                                 </aura:if>
                             </div>
                         </div>

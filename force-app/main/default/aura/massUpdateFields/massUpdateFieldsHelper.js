@@ -65,7 +65,7 @@
 
     onChangeObject: function (component, event, helper) {
         console.log('onChangeObject');
-        component.set("v.IsSpinner", true);
+        component.set("v.IsSpinner", false);
         var getFieldSet = component.get("c.getObjectSelectField");
         var selectedObject = component.get("v.selectedObject") + '';
         getFieldSet.setParams({
@@ -102,12 +102,13 @@
                 // }
 
             } else {
-                component.set("v.IsSpinner", false);
                 helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong OnChangeObject");
             }
         });
         $A.enqueueAction(getFieldSet);
+        debugger;
         component.set("v.IsSpinner", false);
+
     },
 
     callNexthandle: function (component, event, helper) {
@@ -304,11 +305,11 @@
             console.log('result :::::' + result)
             if (result == 'SUCCESS') {
                 var res = response.getReturnValue();
-                if (res.startsWith("Error")) {
-                    helper.showToast(component, "Error", "Failed!", + res);
+                console.log('res==>', res);
+                if (res.startsWith('Error Invalid')) {
+                    helper.showToast(component, "Info", "Info!", res);
+                    component.set("v.stepOneNextButton", true);
                 } else {
-                    // console.log('check the typeof:::;'+ typeof())
-                    console.log('res::::' + JSON.stringify(res));
                     component.set("v.updateFieldList", res);
                 }
             } else {
@@ -335,7 +336,12 @@
             if (result == 'SUCCESS') {
                 var res = response.getReturnValue();
                 console.log('resfor insert::::' + JSON.stringify(res));
-                component.set("v.updateFieldList", res);
+                if (res.startsWith('Error Invalid')) {
+                    helper.showToast(component, "Info", "Info!", res);
+                    component.set("v.stepOneNextButton", true);
+                } else {
+                    component.set("v.updateFieldList", res);
+                }
             } else {
                 helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong setSobjectforInsertRecord");
             }

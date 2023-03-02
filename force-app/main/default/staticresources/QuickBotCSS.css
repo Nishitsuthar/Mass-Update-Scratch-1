@@ -1,0 +1,15 @@
+@media screen and (max-width:1400px){
+    .QuickBotBody .slds-textarea{
+        height: 50px !important;
+    }
+}
+.QuickBotBody .slds-textarea{
+    height: 150px !important;
+}
+.quickbot_input .slds-form-element__control{
+    clear: none;
+}
+.Wel_message .slds-form-element__control{
+    clear: none;
+}
+

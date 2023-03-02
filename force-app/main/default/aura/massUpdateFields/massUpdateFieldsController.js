@@ -28,7 +28,10 @@
     },
 
     onChangeObject: function (component, event, helper) {
+        // component.set("v.IsSpinner", false);
         helper.onChangeObject(component, event, helper);
+        // component.set("v.IsSpinner", true);
+
     },
     //    first next button
     callNexthandle: function (component, event, helper) {
@@ -288,6 +291,23 @@
     },
     handlefileValue: function (component, event, helper) {
         component.set("v.fileName", event.getParam('value'));
+    },
+
+    handleButtonClick: function (component, event, helper) {
+        $A.createComponent(
+            "c:quickBot",
+            {},
+            function (lwcComponent, status, errorMessage) {
+                if (status === "SUCCESS") {
+                    var lwcContainer = component.find("lwcContainer");
+                    lwcContainer.set("v.body", [lwcComponent]);
+                } else if (status === "INCOMPLETE") {
+                    console.log("No response from server or client is offline.");
+                } else if (status === "ERROR") {
+                    console.log("Error: " + errorMessage);
+                }
+            }
+        );
     }
 
 })
