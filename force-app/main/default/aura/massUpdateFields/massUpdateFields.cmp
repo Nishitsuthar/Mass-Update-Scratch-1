@@ -23,6 +23,7 @@
 
     <!-- jenish ganganai 2/2/23 -->
     <aura:attribute name="apiListofObject" type="object[]" />
+    <aura:attribute name="labelListofObject" type="object[]" />
     <aura:attribute name="progress" type="Integer" />
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
     <aura:attribute name="operation" type="String" />  
@@ -549,21 +550,17 @@
         </aura:if>
     </aura:if>
     <aura:if isTrue="{!v.currentStep == 'finished'}">
-        <lightning:card>
-            <div class="slds-text-heading_large slds-align_absolute-center">
-                Records updated succesfully<br/><br/>
-            </div>
-            <div class="slds-text-heading_small slds-align_absolute-center">
-                We have sent you an e-mail on &nbsp; <a> {!v.UserEmail} </a> &nbsp; regarding the same.
-                You can download your Success and Error files from your e-mail. 
-            </div><br/>
-            <div class="slds-text-heading_small slds-align_absolute-center">
-                Also, you can find them inside &nbsp;<b>Files / Libraries / Mass Update.</b>
-            </div>
-        </lightning:card>
+   <lightning:card class="slds-card_full">
+  <div class="slds-text-heading_large slds-align_absolute-center">
+    Records updated successfully<br/><br/>
+  </div>
+  <div class="slds-text-heading_small slds-align_absolute-center">
+    We have sent you an e-mail on {!v.UserEmail}  regarding the same.
+    You can download your Success and Error files from your e-mail. 
+  </div><br/>
+  <div class="slds-text-heading_small slds-align_absolute-center">
+    Also, you can find them inside &nbsp;<b>Files / Libraries / Mass Update.</b>
+  </div>
+</lightning:card>
     </aura:if>
-
-
-
-    
 </aura:component>

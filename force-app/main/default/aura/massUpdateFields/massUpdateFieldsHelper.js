@@ -65,12 +65,19 @@
         getFieldSet.setCallback(this, function (response) {
             var result = response.getState();
             console.log('result===', result);
+            console.log('aass::', response.getReturnValue());
+
+            if (response.getReturnValue() == null) {
+                component.set("v.IsSpinner", false);
+
+            }
             if (result === 'SUCCESS' || result === 'DRAFT') {
                 console.log('aass::', response.getReturnValue());
                 // console.log(response.getReturnValue()[0].apiNameList);
                 console.log(response.getReturnValue()[0].pairWrapperList);
                 component.set("v.fieldList", response.getReturnValue()[0].pairWrapperList);
                 component.set("v.apiListofObject", response.getReturnValue()[0].apiNameList);
+                component.set("v.labelListofObject", response.getReturnValue()[0].labelNameList);
 
                 let objList = response.getReturnValue()[0].pairWrapperList;
                 let fieldTypeObj = {};
@@ -101,11 +108,21 @@
         console.log('file name in massupdate=====>' + component.get("v.fileName"));
         // -----jenish gangani 12/02 
         var apiList = component.get('v.apiListofObject');
+        var labelList = component.get('v.labelListofObject');
+        console.log('label name ==>' + labelList);
         var headerData = component.get("v.header");
         var operation = component.get("v.operation");
         console.log('opratioon ==>' + operation);
         // headerData[0] = headerData[0].toUpperCase();
         // -----jenish gangani 12/02 
+        var headercheck = false;
+        for (let index = 0; index < headerData.length; index++) {
+            if (!(apiList.includes(headerData[index].toUpperCase()) || labelList.includes(headerData[index].toUpperCase()))) {
+                headercheck = true;
+                break;
+            }
+
+        }
 
         if (component.get("v.tabledata").length == 0) {
             helper.showToast(component, "Info", "Info!", "Please Upload File");
@@ -115,8 +132,10 @@
             helper.showToast(component, "Info", "Info!", "Please Select Object First");
         }
         // -----jenish gangani 12/02 
-        else if (!apiList.includes(headerData[0].toUpperCase())) {
-            helper.showToast(component, "Info", "Info!", "Check Your first Record Or Object");
+
+        else if (headercheck) {
+            console.log('headercheck data==>' + headercheck);
+            helper.showToast(component, "Info", "Info!", "In your header, only include the API or label name.");
         }
         // -----jenish gangani 12/02 
 

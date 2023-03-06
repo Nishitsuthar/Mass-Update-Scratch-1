@@ -34,9 +34,14 @@ public with sharing class updateFieldsController {
     //Getting fields from salesforce using ObjectName
     @AuraEnabled
     public static List<pairWrapper1> getObjectSelectField(String ObjectName){
+        System.debug('object ==>'+ ObjectName);
+        if(ObjectName == ''){
+            return null;
+        }
         List<pairWrapper> lstfieldname = new List<pairWrapper>();
         List<pairWrapper1> apiNameAndList = new List<pairWrapper1>(); 
         List<String> apiList = new List<String>();
+        List<String> labelList = new List<String>();
         Map<String, Schema.SObjectField> fieldMap = Schema.getGlobalDescribe().get(ObjectName).getDescribe().fields.getMap();
       
         for (Schema.SObjectField fields: fieldMap.Values()) {  
@@ -54,6 +59,8 @@ public with sharing class updateFieldsController {
                 field.relationshipName = dfield.getRelationshipName();    
 
                  apiList.add((dfield.getName()).toUpperCase());
+                 labelList.add((dfield.getLabel()).toUpperCase());
+
                 // pairWrapper1 field1 = new pairWrapper1();
                 // field1.apiNameList = dfield.getName();
 
@@ -82,8 +89,8 @@ public with sharing class updateFieldsController {
 
         field1.pairWrapperList = lstfieldname;
         field1.apiNameList = apiList;
-        // field1.sobj11 = sobj12;
         field1.fieldMap1 = newMap;
+        field1.labelNameList = labelList;
         
         System.debug('fieldMap12==>'+ fieldMap12);
         System.debug('sobj12==>'+sobj12);
@@ -659,6 +666,7 @@ public with sharing class updateFieldsController {
     // -----------jenish gangani
 public class pairWrapper1{
         @AuraEnabled public List<string> apiNameList{get; set;}
+        @AuraEnabled public List<string> labelNameList{get; set;}
         @AuraEnabled public List<pairWrapper> pairWrapperList{get; set;}
         @AuraEnabled public Map<String, String> fieldMap1{get; set;}
         // @AuraEnabled public Schema.SObjectType sobj11{get; set;}

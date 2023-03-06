@@ -133,3 +133,27 @@
 .THIS .slds-select_container .slds-select {
     -webkit-appearance: menuList
 }
+
+/* Style for large screens */
+@media only screen and (min-width: 768px) {
+    .THIS .slds-card_full {
+        width: 50%;
+        margin: 0 auto;
+    }
+}
+
+/* Style for medium screens */
+@media only screen and (max-width: 767px) {
+    .THIS .slds-card_full {
+        width: 80%;
+        margin: 0 auto;
+    }
+}
+
+/* Style for small screens */
+@media only screen and (max-width: 480px) {
+    .THIS .slds-card_full {
+        width: 100%;
+        margin: 0;
+    }
+}
