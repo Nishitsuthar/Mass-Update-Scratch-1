@@ -1,4 +1,6 @@
-<template>
+<template >
+        <template if:true={showComponent}>
+
     <div class="Quickbot_maincontaner">
         <div class="Quickbot_contaner" style={bgimg}>
             <div class="quickbot_header">
@@ -8,7 +10,7 @@
                     </div>
                     <div class="quickbot_header_body">
                         <!-- <div class="quickbot_text">{header}</div> -->
-                        <div class="quickbot_text">Quick Bot</div>
+                        <div class="quickbot_text">Mass Forum</div>
                         <img src={Cross} class="cross_img" onclick={quickboe_close}>
                         
                     </div>
@@ -29,7 +31,7 @@
                             </div>
                         </template>    
                         <div class="Wel_message">
-                            <p>Hello!!<span>&#128075;</span> Welcome to the Quick Bot. <br> Please fill below form for your query.</p>
+                            <p>Hello!!<span>&#128075;</span> Welcome to the Mass Forum. <br> Please fill below form for your query.</p>
                         </div>
                     </template>    
                 </div>    
@@ -45,7 +47,7 @@
                             <div class="email_error_msg" if:false={email_msg}>Please Enter Valid Email
                                 Details..!</div>
 
-                            <lightning-input type="text" label="Subject" placeholder="Enter Your Subject" value={quickbotsubject} onchange={Quickbot_subject} class="quickbot_input"></lightning-input>
+                            <lightning-input type="text" label="Subject" placeholder="Enter Your Subject" value={quickbotsubject} onchange={Quickbot_subject} class="quickbot_input" required></lightning-input>
                             <lightning-textarea label="Message" placeholder="Enter your Message" value={quickbotmessage} onchange={Quickbot_message} class="quickbot_message" required></lightning-textarea>
                             <!-- <textarea label="Message" placeholder="Enter your message here" value={quickbotmessage} onchange={Quickbot_message} class="quickbot_message"></textarea> -->
                             <div class="quickbot_button" onclick={quickbot_Submit}><span>Submit</span></div>
@@ -68,4 +70,6 @@
         <template if:true={error_toast}>
         </template>
     </div>
+</template>
+
 </template>

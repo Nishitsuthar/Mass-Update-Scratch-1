@@ -26,7 +26,15 @@
     <aura:attribute name="progress" type="Integer" />
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
     <aura:attribute name="operation" type="String" />  
+    <aura:attribute name="insertFieldList" type="String" />
+
      <!-- jenish gangani 2/2/23 -->
+
+     <!--* Nishi Suthar 28/02/2023  -->
+     <aura:attribute name="schema" type="map" description="description"/>
+    <aura:attribute name="fieldType" type="object"/>
+    <aura:attribute name="fieldTypeObj" type="object"/>
+     <!--* Nishi Suthar 28/02/2023  -->
 
     <aura:attribute name="allDataList" type="object[]" />
     <aura:attribute name="addDeleteBoolean" type="boolean"  default="false"/>
@@ -55,6 +63,8 @@
     <aura:attribute name="stepOneNextButton" type="boolean" default="false"/>
     <aura:attribute name="CriteriaDeleteButton" type="boolean" default="true"/>
     <aura:attribute name="FieldMappingDeleteButton" type="boolean" default="false"/>
+    <aura:attribute name="inputValue" type="boolean" default="false"/>
+
           <!-- jenish ganganai 2/2/23 -->
 
           <!-- jenish gangani 7/2/23 -->
@@ -164,9 +174,13 @@
                     <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
                         <div class="slds-float_right" style="margin-right:1%">
                             <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
-                                <!-- <a>Help?<c:quickBot/></a> -->
-                                    <a onclick="{!c.handleButtonClick}">Help?</a>
-                                    <aura:html tag="div" aura:id="lwcContainer" />
+                                   <!-- <a>Help?<c:quickBot/></a> -->
+                                   <a onclick="{!c.openLWC}">Help?</a>
+                                   <!-- <a onclick="{!c.handleButtonClick}">Help?</a>
+                                   <aura:html tag="div" aura:id="lwcContainer" /> -->
+                                   <aura:if isTrue="{!v.inputValue == true}">
+                                   <c:quickBot onvaluechange="{!c.getValueFromLwc}"/><br/>
+                                   </aura:if>
                             </div>
                             <br/>
                             <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
@@ -235,7 +249,7 @@
                                     </aura:if> -->
                                 </div>
                             </div>
-                            {!v.currentStep}
+                            <!-- {!v.currentStep} -->
                             <div class="slds-clearfix">
                                 <div class="slds-float_right"> 
                                     <lightning:button disabled="{!v.stepOneNextButton}" variant="brand" aura:id="save" value="{!v.currentStep}" label="Next" title="Next" onclick="{! c.callNexthandle }"/>
@@ -253,8 +267,12 @@
                     <div class="slds-float_right" style="margin-right:1%">
                         <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
                             <!-- <a>Help?</a> -->
-                            <a onclick="{!c.handleButtonClick}">Help?</a>
-                                    <aura:html tag="div" aura:id="lwcContainer" />
+                            <a onclick="{!c.openLWC}">Help?</a>
+                            <!-- <a onclick="{!c.handleButtonClick}">Help?</a>
+                            <aura:html tag="div" aura:id="lwcContainer" /> -->
+                            <aura:if isTrue="{!v.inputValue == true}">
+                            <c:quickBot onvaluechange="{!c.getValueFromLwc}"/><br/>
+                            </aura:if>
                         </div>
                         <br/>
                         <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
@@ -459,7 +477,7 @@
                             </tbody>
                         </table><br/>
                         </aura:if>
-                        {!v.currentStep}
+                        <!-- {!v.currentStep} -->
                         <div class="slds-clearfix">
                             <div class="slds-float_right"> 
                                 <lightning:button variant="brand" aura:id="save" value="{!v.currentStep}" label="Previous" title="Previous" onclick="{! c.previousClikButton }"/>
@@ -502,7 +520,7 @@
                                          keyField="id"
                                          hideCheckboxColumn="true"
                                          row-number-offset = "0"/>
-                                         {!v.currentStep}
+                                         <!-- {!v.currentStep} -->
                     <div class="slds-clearfix">
                         <div class="slds-page-header" role="banner">
                             <div class="slds-float_left" style="display:inline-block;">   

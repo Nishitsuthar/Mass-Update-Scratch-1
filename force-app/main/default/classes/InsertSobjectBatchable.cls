@@ -134,7 +134,7 @@ global class InsertSobjectBatchable implements Database.Batchable<sObject>, Data
         
         try{
             Messaging.SingleEmailMessage email =new Messaging.SingleEmailMessage();
-            String[] toAddresses = new list<string> { 'jenish.g@mvclouds.com' };
+            String[] toAddresses = new list<string> { UserInfo.getUserEmail() };
             String subject = sObjectName + ' Operation Completed successfully.' ;
             email.setSubject(subject);
             email.setHtmlBody('Dear '+ UserInfo.getFirstName() + ' ' + UserInfo.getLastName() +',<br /><br />'

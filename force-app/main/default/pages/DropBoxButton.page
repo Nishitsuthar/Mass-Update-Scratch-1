@@ -1,4 +1,4 @@
-<apex:page showHeader="true" sidebar="true" standardStylesheets="true" applyHtmlTag="true" controller="URL_Controller">
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="true" controller="URL_Controller">
     <html>
 
     <head>
@@ -43,12 +43,12 @@
                     },
                     linkType: "direct",
                     multiselect: false,
-                    extensions: [".xlsx", ".csv", ".xls"]
+                    extensions: [".xlsx", ".csv", ".xls"],
                 });
             }
             function messageSendLWC(nameFile, a) {
 
-                var lexOrigin = "{!lexOrigin1}"
+                var lexOrigin = "https://mvclouds-dev-ed.lightning.force.com"
 
                 var message = {
                     name: "new_upload_btn",
@@ -61,7 +61,7 @@
         </script>
     </head>
 
-    <body>
+    <body style="margin:0;">
         <apex:image url="{!$Resource.dropbox}" onclick="chooseFile();" height="28px" width="30px" style="border:none; cursor: pointer;
 " />
     </body>

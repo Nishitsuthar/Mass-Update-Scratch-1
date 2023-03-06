@@ -17,8 +17,8 @@
 }
 
 .Wel_message {
-    border: 1px solid #6699CC;
-    background-color: #f1f1f1;
+    border: 1px solid #b4bdf3;
+    background-color: #fafafa;
     border-radius: 16px 16px 16px 0px;
     padding: 10px;
     /* margin: 10px 0; */
@@ -75,7 +75,7 @@
     width: 0px;
     height: 0px;
     border-radius: 50%;
-    background: #6699CC;
+    background: #3c4ca3;
     animation: loading_492 1s ease infinite;
     animation-delay: 1s;
 }
@@ -110,7 +110,7 @@
 /* end tying  */
 
 .quickbot_header {
-    background-color: #6699CC;
+    background-color: #3c4ca3;
     border-radius: 16px 16px 0 0;
     width: 100%;
     height: 90px;
@@ -234,7 +234,7 @@
     display: flex;
     align-items: center;
     margin-left: 5px;
-    color: #6699CC;
+    color: #3c4ca3;
 }
 
 .email_error_msg {
@@ -249,7 +249,7 @@
 .quickbot_button {
     height: 40px;
     color: #FFFFFF;
-    background-color: #6699CC;
+    background-color: #3c4ca3;
     font-weight: 400;
     line-height: 25px;
     font-size: 20px;

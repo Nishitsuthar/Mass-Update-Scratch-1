@@ -67,10 +67,26 @@ public with sharing class updateFieldsController {
         }
         pairWrapper1 field1 = new pairWrapper1();
 
+        Map<String, Schema.SObjectField> fieldMap12 = Schema.getGlobalDescribe().get(ObjectName).getDescribe().fields.getMap();
+        
+        map<string,string> newMap= new Map<string,string>();
+        
+        for(String strKey: fieldMap12.keyset()) {
+            newMap.put(strKey, String.valueof(fieldMap.get(strKey)));
+        }
+
+        
+        Schema.SObjectType sobj12 = Schema.getGlobalDescribe().get(ObjectName);
+        SObject sobj = sobj12.newSObject();
+        System.debug('sobj12 '+sobj);
 
         field1.pairWrapperList = lstfieldname;
         field1.apiNameList = apiList;
+        // field1.sobj11 = sobj12;
+        field1.fieldMap1 = newMap;
         
+        System.debug('fieldMap12==>'+ fieldMap12);
+        System.debug('sobj12==>'+sobj12);
         System.debug('lstfieldname===='+lstfieldname);
         System.debug('APiListName===='+apiList);
         apiNameAndList.add(field1);
@@ -115,13 +131,7 @@ public with sharing class updateFieldsController {
         System.debug('keyValueMap::::'+keyValueMap);
         System.debug('csvAllDataMap::::::'+ csvAllDataMap);
         
-        // for(uploadCsvFileJsonWrapper ucv:tablePushDataListJsonDeserialize){        
-        //     keyValueMap.put(ucv.SObjectField, new Set<String>()); 
-        // }
-        // if(!selectedListOfFields.contains('Id')){
-        //     selectedListOfFields.add('Id');
-        // }
-        // System.debug('selected field==='+selectedListOfFields);
+      
         List<String> mnList = new List<String>();
         Integer j = 0;
         
@@ -143,127 +153,30 @@ public with sharing class updateFieldsController {
                 if(data.endsWith(',')) data += ' ';
                 
                 List<String> StringData = data.split(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)');
-                System.debug(StringData);
-                // for(uploadCsvFileJsonWrapper ucv : tablePushDataListJsonDeserialize){
-                //     if(IndexFieldCSV.get(ucv.csvfield)!=null){
-                //         if(keyValueMap.containskey(ucv.SObjectField)){
-                //             if(d.fields.getMap().get(ucv.SObjectField).getDescribe().isUpdateable() && d.fields.getMap().get(ucv.SObjectField).getDescribe().isAccessible()){
-                //                 String fieldType = String.valueOf(d.fields.getMap().get(ucv.SObjectField).getDescribe().getType());
-                            
-                //                 if(fieldType == 'DATE'){
-                //                     strKey += String.valueOf(date.parse(StringData[IndexFieldCSV.get(ucv.csvfield)])).removeEnd(' 00:00:00').trim()+'^';
-                //                 }else{
-                //                     if(StringData[IndexFieldCSV.get(ucv.csvfield)].trim().startsWith('"') && StringData[IndexFieldCSV.get(ucv.csvfield)].trim().endsWith('"')){
-                //                         System.debug(StringData[IndexFieldCSV.get(ucv.csvfield)].trim().removeStart('"').removeEnd('"'));
-                //                     	strKey += StringData[IndexFieldCSV.get(ucv.csvfield)].trim().removeStart('"').removeEnd('"')+'^';                                            
-                //                     }else{
-                //                       	strKey += StringData[IndexFieldCSV.get(ucv.csvfield)].trim()+'^';     
-                //                     }
-                //                 }
-                //                 keyValueMap.get(ucv.SObjectField).add(StringData[IndexFieldCSV.get(ucv.csvfield)].trim());
-                //             }
-                //         }
-                //     }
-                // }
-                // System.debug('keyValueMap::::::'+ keyValueMap);
+               
 
                 for(uploadCsvFileJsonWrapper field : FieldToUpdateListWpr){
                     if(IndexFieldCSV.get(field.csvfield)!=null){
                         if(StringData[IndexFieldCSV.get(field.csvfield)].trim().startsWith('"') && StringData[IndexFieldCSV.get(field.csvfield)].trim().endsWith('"')){
                         	strValue.put('CSV' + field.csvfield , StringData[IndexFieldCSV.get(field.csvfield)].trim().removeStart('"').removeEnd('"'));  
-                            // strKey = StringData[IndexFieldCSV.get(field.csvfield)].trim()+'^'; 
-                                        // System.debug('176===>'+ strKey);   
+                 
                         }else{
                             strValue.put( 'CSV' + field.csvfield , StringData[IndexFieldCSV.get(field.csvfield)].trim());    
-                            // strKey = StringData[IndexFieldCSV.get(field.csvfield)].trim()+'^'; 
-                                        // System.debug('180===>'+ strKey); 
+                      
                         }                       
                     }
                 }
-                System.debug('180====>'+strKey);
-                String sInteger = String.valueOf(x);
+                // System.debug('180====>'+strKey);
+                String sInteger = String.valueOf(j);
                 csvAllDataMap.put(sInteger, strValue);
                
             }
-            System.debug('strValue::::::'+strValue);
-            System.debug('csvAllDataMap for the set query::::::'+csvAllDataMap);
-             x++;
+         
+             j++;
 
         }
         
-        // Set<String> listSql = new Set<String>();    
-        // String soqlQuer = 'SELECT ';
         
-        //Mapping of fields which data have to save into which fields
-        // if(FieldToUpdateListWpr.size() > 0){
-        //     for(uploadCsvFileJsonWrapper field : FieldToUpdateListWpr){
-        //         if(field.SObjectField != null){
-        //             if(!listSql.contains(field.SObjectField)){
-        //                 listSql.add(field.SObjectField);
-        //             }
-        //         }
-        //     }
-        // }
-        
-        //Selected fields from CSV to making condition for fetching record
-        // if(tablePushDataListJsonDeserialize.size() > 0){
-        //     for(uploadCsvFileJsonWrapper field : tablePushDataListJsonDeserialize){
-        //         if(field.SObjectField != null){
-        //             if(!listSql.contains(field.SObjectField)){
-        //                 listSql.add(field.SObjectField);
-        //             }
-        //         }
-        //     }
-        // }
-        
-        //Showing the fields which data have to Showing from salesforce
-        // if(selectedListOfFields != null && selectedListOfFields.size() > 0){
-        //     for(String fd : selectedListOfFields){
-        //         if(!listSql.contains(fd)){
-        //             listSql.add(fd);
-        //         }
-        //     }
-        // }
-        
-        
-        // List<String> lstFetchField = new List<String>();
-        // lstFetchField.addAll(listSql);
-        // String allstring = string.join(lstFetchField,',');
-
-        // soqlQuer += allstring;
-        // soqlQuer += ' FROM ' +selectObjectName+ ' WHERE ';
-        
-        //****************************************** Where condition start from here ***********************************!!
-        
-        //Getting schema of selected Object
-   		
-        // integer i=0;
-        // for(String st1 : keyValueMap.keyset()){
-        //     String whereStr = '(';
-        //     String fieldType = String.valueOf(d.fields.getMap().get(st1).getDescribe().getType());        
-        //     for(String s : keyValueMap.get(st1)){
-        //         if(s != null && s != ''){
-        //         	if(fieldType == 'NUMBER' || fieldType == 'DOUBLE' || fieldType == 'Boolean' || fieldType == 'CURRENCY' || fieldType == 'DATETIME' || fieldType == 'PERCENT' || fieldType == 'TIME'){
-        //                 whereStr += s+',';
-        //             }else if(fieldType == 'DATE'){
-        //                 whereStr += String.valueOf(date.parse(s))+',';    
-        //             }else{
-        //                 if(s.contains('\'')){
-        //                     whereStr += '\''+s.replace('\'', '\\\'')+'\',';
-        //                 }else{
-        //                     whereStr += '\''+s+'\',';
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     whereStr = whereStr.removeEnd(',') + ')';
-        //     if(i==0){
-        //         soqlQuer += st1 + ' IN ' + whereStr;
-        //     }else{
-        //         soqlQuer += ' AND ' + st1 + ' IN ' + whereStr;
-        //     }
-        //     i++;
-        // }
         
         List<ContentWorkspace> ws = [SELECT Id, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Mass Update' LIMIT 1];
         if(ws.isEmpty()){
@@ -275,10 +188,6 @@ public with sharing class updateFieldsController {
                 // Folder Existed
             }
         }
-
-        // List<wrapDataList> listData = new List<wrapDataList>();
-        // listData.add(new wrapDataList(soqlQuer, csvAllDataMap));
-        // System.debug('ListData====='+listData);
         System.debug('275=====>'+csvAllDataMap);
         return csvAllDataMap;
     }
@@ -287,115 +196,56 @@ public with sharing class updateFieldsController {
         //  Get the csv data and make query for getting salesforce data
 
       @AuraEnabled
-    public static List<wrapDataList> setQuery(List<String> selectedListOfFields,String selectObjectName,List<String> headerData,String tableData,String tablePushDataListJson, String FieldToUpdateList){
+    public static List<wrapDataList> setQuery(List<String> selectedListOfFields,String selectObjectName,List<String> headerData,String tableData,String tablePushDataListJson, String FieldToUpdateList, String keyValueMap, String csvAllDataMap){
         
-        System.debug('Set query called==============');
+       System.debug('Set query called==============');
         System.debug('selectedListOfFields===='+selectedListOfFields);
         System.debug('selectObjectName======'+selectObjectName);
         System.debug('headerData======'+headerData);
         System.debug('tableData======'+tableData);
-        // System.debug('tableData type of======'+tableData instanceof String);
         System.debug('tablePushDataListJson======'+tablePushDataListJson);
-        System.debug('FieldToUpdateList====='+FieldToUpdateList); 
+        System.debug('FieldToUpdateList====='+FieldToUpdateList);
+        System.debug('keyValueMap12====='+keyValueMap);
+        System.debug('csvAllDataMap12====='+csvAllDataMap);
+
+
+        Map<String, Set<String>> mapFromJson = (Map<String, Set<String>>) JSON.deserialize(keyValueMap, Map<String, Set<String>>.class);
+        System.debug('mapFromJson '+mapFromJson);
+
+        Map<String, Map<String,String>> dataObj = (Map<String, Map<String,String>>) JSON.deserialize(csvAllDataMap, Map<String, Map<String,String>>.class);
+        System.debug('dataObje '+dataObj);
+
+        // Convert the nested Map<String, Object> into a Map<String, Map<String, String>>
+
+
+
 
 
         Map<String, Integer> IndexFieldCSV = new Map<String, Integer>();
         
-        Integer x = 0;
-        for(String s : headerData){
-            IndexFieldCSV.put(s, x);
-            x++;
+      
+        // ----- jenish 26/02
+        for (Integer i = 0; i < headerData.size(); i++) {
+            IndexFieldCSV.put(headerData[i], i);
         }
-
-        System.debug('IndexFieldCSV::::::'+ IndexFieldCSV);
+        // ----- jenish 26/02
         
         List<String>                    dataList                         = (List<String>)                   System.JSON.deserialize(tableData               , List<String>.class);
         List<uploadCsvFileJsonWrapper>  tablePushDataListJsonDeserialize = (List<uploadCsvFileJsonWrapper>) System.JSON.deserialize(tablePushDataListJson   , List<uploadCsvFileJsonWrapper>.class);
         List<uploadCsvFileJsonWrapper>  FieldToUpdateListWpr             = (List<uploadCsvFileJsonWrapper>) System.JSON.deserialize(FieldToUpdateList       , List<uploadCsvFileJsonWrapper>.class);
-        
-        Map<String,Set<String>>         keyValueMap     = new Map<String,Set<String>>();
-        Map<String,Map<String,String>>  csvAllDataMap   = new Map<String,Map<String,String>>();
 
-        System.debug('dataList::::::::'+ dataList);
-        System.debug('tablePushDataListJsonDeserialize::::'+tablePushDataListJsonDeserialize);
-        System.debug('FieldToUpdateListWpr::::::::'+FieldToUpdateListWpr);
-        System.debug('keyValueMap::::'+keyValueMap);
-        System.debug('csvAllDataMap::::::'+ csvAllDataMap);
-        
-        for(uploadCsvFileJsonWrapper ucv:tablePushDataListJsonDeserialize){        
-            keyValueMap.put(ucv.SObjectField, new Set<String>()); 
-        }
-        if(!selectedListOfFields.contains('Id')){
-            selectedListOfFields.add('Id');
-        }
-        System.debug('331======> '+ keyValueMap);
-        System.debug('selected field==='+selectedListOfFields);
-        List<String> mnList = new List<String>();
-        Integer j = 0;
-        
-        String strKey;
-        Map<String,String> strValue = new Map<String,String>(); 
-        Integer k = 0;
-        SObjectType r = ((SObject)(Type.forName('Schema.'+selectObjectName).newInstance())).getSObjectType();
-        System.debug('r:::::'+ r);
-   		DescribeSObjectResult d = r.getDescribe();
-        System.debug('d:::::::'+d);
-        //Getting CSV data and storing it into *csvAllDataMap* map
-        System.debug('dataList:::::'+ dataList);
-        for(String data : dataList){
-            strKey = ''; 
-            strValue = new Map<String, String>();
-            k = 0;
-            data=data.trim(); 
-            System.debug('349 data ====>'+ data);
-            if(data != ''){  
-                if(data.endsWith(',')) data += ' ';
-                
-                List<String> StringData = data.split(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)');
-                System.debug('stringDate==='+StringData);
-                for(uploadCsvFileJsonWrapper ucv : tablePushDataListJsonDeserialize){
-                    if(IndexFieldCSV.get(ucv.csvfield)!=null){
 
-                        if(keyValueMap.containskey(ucv.SObjectField)){
-                            if(d.fields.getMap().get(ucv.SObjectField).getDescribe().isUpdateable() && d.fields.getMap().get(ucv.SObjectField).getDescribe().isAccessible()){
-                                String fieldType = String.valueOf(d.fields.getMap().get(ucv.SObjectField).getDescribe().getType());
-                            
-                                if(fieldType == 'DATE'){
-                                    strKey += String.valueOf(date.parse(StringData[IndexFieldCSV.get(ucv.csvfield)])).removeEnd(' 00:00:00').trim()+'^';
-                                    System.debug('356==>'+ strKey);
-                                }else{
-                                    if(StringData[IndexFieldCSV.get(ucv.csvfield)].trim().startsWith('"') && StringData[IndexFieldCSV.get(ucv.csvfield)].trim().endsWith('"')){
-                                        System.debug('355===='+StringData[IndexFieldCSV.get(ucv.csvfield)].trim().removeStart('"').removeEnd('"'));
-                                    	strKey += StringData[IndexFieldCSV.get(ucv.csvfield)].trim().removeStart('"').removeEnd('"')+'^'; 
-                                        System.debug('361===>'+ strKey);                                           
-                                    }else{
-                                      	strKey += StringData[IndexFieldCSV.get(ucv.csvfield)].trim()+'^'; 
-                                        System.debug('364===>'+ strKey);                                               
-                                    }
-                                }
-                                keyValueMap.get(ucv.SObjectField).add(StringData[IndexFieldCSV.get(ucv.csvfield)].trim());
-                            }
-                        }
-                    }
-                }
-                System.debug('keyValueMap::::::'+ keyValueMap);
-                for(uploadCsvFileJsonWrapper field : FieldToUpdateListWpr){
-                    if(IndexFieldCSV.get(field.csvfield)!=null){
-                        if(StringData[IndexFieldCSV.get(field.csvfield)].trim().startsWith('"') && StringData[IndexFieldCSV.get(field.csvfield)].trim().endsWith('"')){
-                            System.debug('if in query');
-                        	strValue.put('CSV' + field.csvfield , StringData[IndexFieldCSV.get(field.csvfield)].trim().removeStart('"').removeEnd('"'));    
-                        }else{
-                            System.debug('else in query');
-                            strValue.put('CSV' + field.csvfield , StringData[IndexFieldCSV.get(field.csvfield)].trim());    
-                        }                       
-                    }
-                }
-                csvAllDataMap.put(strKey.removeEnd('^'), strValue);
-            }
-            System.debug('strValue::::::'+strValue);
-            System.debug('csvAllDataMap for the set query::::::'+csvAllDataMap);
 
-        }
+        
+        System.debug('IndexFieldCSV====='+ IndexFieldCSV);
+        System.debug('dataList 2nd======'+dataList);
+        System.debug('tablePushDataListJsonDeserialize 2nd======'+tablePushDataListJsonDeserialize);
+        System.debug('FieldToUpdateListWpr 2nd ====='+FieldToUpdateListWpr);
+
+
+       
+        DescribeSObjectResult d= Schema.getGlobalDescribe().get(selectObjectName).getDescribe();
+       
         
         Set<String> listSql = new Set<String>();    
         String soqlQuer = 'SELECT ';
@@ -437,7 +287,6 @@ public with sharing class updateFieldsController {
         String allstring = string.join(lstFetchField,',');
 
         soqlQuer += allstring;
-        System.debug('437===>soqlQuer===>'+ soqlQuer);
         soqlQuer += ' FROM ' +selectObjectName+ ' WHERE ';
         
         //****************************************** Where condition start from here ***********************************!!
@@ -445,15 +294,13 @@ public with sharing class updateFieldsController {
         //Getting schema of selected Object
    		
         integer i=0;
-        for(String st1 : keyValueMap.keyset()){
+        for(String st1 : mapFromJson.keyset()){
             String whereStr = '(';
             String fieldType = String.valueOf(d.fields.getMap().get(st1).getDescribe().getType());        
-            System.debug('fieldType of 450=====>'+ fieldType);
-            for(String s : keyValueMap.get(st1)){
+            for(String s : mapFromJson.get(st1)){
                 if(s != null && s != ''){
                 	if(fieldType == 'NUMBER' || fieldType == 'DOUBLE' || fieldType == 'Boolean' || fieldType == 'CURRENCY' || fieldType == 'DATETIME' || fieldType == 'PERCENT' || fieldType == 'TIME'){
                         whereStr += s+',';
-                        System.debug('450=====>'+ whereStr);
                     }else if(fieldType == 'DATE'){
                         whereStr += String.valueOf(date.parse(s))+',';    
                     }else{
@@ -486,7 +333,9 @@ public with sharing class updateFieldsController {
         }
         
         List<wrapDataList> listData = new List<wrapDataList>();
-        listData.add(new wrapDataList(soqlQuer, csvAllDataMap));
+        listData.add(new wrapDataList(soqlQuer, dataObj));
+        System.debug('dataObj==>'+dataObj);
+        System.debug('soq==>'+ soqlQuer);
         System.debug('ListData====='+listData);
         return listData;
     }
@@ -598,100 +447,67 @@ public with sharing class updateFieldsController {
         List<SObject> objList = new List<SObject>(); 
        
         Map<String, Schema.SObjectField> fieldMap = Schema.getGlobalDescribe().get(selectObjectName).getDescribe().fields.getMap();
+        System.debug('fieldMap '+fieldMap);
+        
+        map<string,string> newMap= new Map<string,string>();
+        for(String strKey: fieldMap.keyset()) {
+            newMap.put(strKey, String.valueof(fieldMap.get(strKey)));
+        }
+        System.debug('fieldMap '+newMap);
         
         Schema.SObjectType sobj1 = Schema.getGlobalDescribe().get(selectObjectName);
-        System.debug('allData from :::'+ allData);
+        // System.debug('allData from :::'+ allData);
         
         for(Map<String,String> addMap : allData.values()){
             SObject sobj = sobj1.newSObject();
-            System.debug('FieldToUpdateListWpr====> 605====>'+ FieldToUpdateListWpr);
+            // System.debug('FieldToUpdateListWpr====> 605====>'+ FieldToUpdateListWpr);
             for(uploadCsvFileJsonWrapper field : FieldToUpdateListWpr){
                     if(addMap.get('CSV'+field.csvfield) != ''){
                         if(sobj.Id == null){
                             sobj.put('Id' , addMap.get('SFId'));
                         }
                         Schema.DisplayType fielddataType = fieldMap.get(field.SObjectField).getDescribe().getType();
-                        System.debug('fielddataType===>612==>'+ fielddataType);
+                        System.debug('fielddataType '+fielddataType);
+                        // System.debug('fielddataType===>612==>'+ fielddataType);
                         if(fieldMap.get(field.SObjectField).getDescribe().isAccessible() && fieldMap.get(field.SObjectField).getDescribe().isUpdateable()){
                             if(fielddataType == Schema.DisplayType.PERCENT || fielddataType == Schema.DisplayType.CURRENCY || fielddataType == Schema.DisplayType.Double){
                                 sobj.put(field.SObjectField, Decimal.valueof(addMap.get('CSV'+field.csvfield).trim()));
                             }
                             else if(fielddataType == Schema.DisplayType.DATE){
                                 try{ 
-                                    // System.debug('619==>date filed ===>'+ addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim());
-                                    // System.debug('620==>date filed ===>'+ addMap.get('CSV'+field.csvfield).trim());
                                     sobj.put(field.SObjectField, date.parse(addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim()));  
-                                    // string w =  (addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim()) ;
-                                    // System.debug('w== 623==>'+ w);
-                                    // sobj.put(field.SObjectField, w);      
- 
                                 }catch(Exception e){
                                     System.debug('Error for Date ' + e.getMessage());
                                     return 'Error '+e.getMessage();
                                 }
                             } 
                             else if(fielddataType == Schema.DisplayType.DATETIME){
-                                System.debug('setSobjectList Method in DateTime Field');
-                                // jenish gangani update datetime field
-                                // https://salesforce.stackexchange.com/questions/247210/system-typeexception-invalid-date-time-2019-01-03t002601-711-0200
+                              
                                 try {
-                                    // sobj.put(field.SObjectField, addMap.get('CSV'+field.csvfield).trim());
-                                   // String a = addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim() + '.000-00:00';
-                                //  String a = (addMap.get('CSV'+field.csvfield).trim()).substringBefore('.') + '.000-00:00';
-                                    //System.debug('a::::'+ a);
-                                    // a = a + '.711-02:00';
-                                    //a = a + '.000-00:00';
-                                    //System.debug('agian a of 634==> '+ a);
-
-                                    // 2023-02-12T05:20:52.000Z
-                                    // String data = '2019-01-03T00:26:01.711-02:00';
-                                    //String data = a;
-                                    //System.debug('data of all 639====>' + data);
-                                   // Datetime dt = (DateTime)JSON.deserialize('"' + (addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim() + '.000-00:00') + '"', DateTime.class);
-                                //    String isoTimestamp = '2023-02-12T05:20:52.000Z';
-                                //    String isoTimestamp = addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim();
-                                //    String timestampWithoutFraction = isoTimestamp.substring(0, 19);
-                                        // String userInput = '2019-01-03';
-                                        // Time defaultTime = Time.newInstance(0, 0, 0, 0); // default time is midnight
-                                        // Datetime myDateTime;
-                                        // DateTime.newInstance(tetsdate, Time.newInstance(12, 0, 0, 0));
-
-//                                         if (!userInput.matches('^\\d{4}-\\d{2}-\\d{2}$')) {
-//                                             // user input contains a date and time
-//                                             try {
-//                                                 myDateTime = Datetime.valueOf(userInput);
-//                                             } catch (TypeException e) {
-//                                                                                         // h                                        andle invalid user input
-//                                             }
-//                                             } else {
-//                                             // user input contains only a date, add default time
-//                                             myDateTime = Datetime.newInstance(Date.valueOf(userInput), defaultTime);
-//                                         }
-
-// System.debug(myDateTime);
                                      sobj.put(field.SObjectField, (DateTime)JSON.deserialize('"' + ((addMap.get('CSV'+field.csvfield).trim()).substringBefore('.') + '.000-00:00') + '"', DateTime.class)); 
-                                    //  sobj.put(field.SObjectField, DateTime.parse(addMap.get('CSV'+field.csvfield).removeEnd('.000Z').trim())); 
                                 } catch (Exception e) {
-                                    System.debug('Error message for date/time ' + e.getMessage());
                                     return 'Error ' + e.getMessage();
                                 }
                                // jenish gangani update datetime field
                                 // sobj.put(field.SObjectField, DATETIME.valueof(lstStr.get(listCSv)));  
                             }
                             else if(fielddataType == Schema.DisplayType.TIME){
-                                  String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
-                                  Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
-                                                                     ,Integer.valueOf(strTimeSplit[1]) //min
-                                                                     ,0                                //sec
-                                                                     ,0); 
-                                sobj.put(field.SObjectField, timeChange);  
-                            }
+                                 try {
+                                String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
+                                Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
+                                                                   ,Integer.valueOf(strTimeSplit[1]) //min
+                                                                   ,0                                //sec
+                                                                   ,0); 
+                              sobj.put(field.SObjectField, timeChange); 
+                             } catch (Exception e) {
+                                    return 'Error ' + e.getMessage();
+                                }                             }
                             else if(fielddataType == Schema.DisplayType.Boolean){
                                 sobj.put(field.SObjectField, Boolean.valueof(addMap.get('CSV'+field.csvfield).trim()));  
                             }
                             else{
                                 sobj.put(field.SObjectField, addMap.get('CSV'+field.csvfield));  
-                                System.debug(addMap.get('CSV'+field.csvfield));
+                                // System.debug(addMap.get('CSV'+field.csvfield));
                             }                            
                         }                        
                     }
@@ -716,12 +532,10 @@ public with sharing class updateFieldsController {
         
         for(Map<String,String> addMap : allData.values()){
             SObject sobj = sobj1.newSObject();
-            System.debug(FieldToUpdateListWpr);
+            // System.debug(FieldToUpdateListWpr);
             for(uploadCsvFileJsonWrapper field : FieldToUpdateListWpr){
                     if(addMap.get('CSV'+field.csvfield) != ''){
-                        // if(sobj.Id == null){
-                        //     sobj.put('Id' , addMap.get('SFId'));
-                        // }
+                       
                         Schema.DisplayType fielddataType = fieldMap.get(field.SObjectField).getDescribe().getType();
                         if(fieldMap.get(field.SObjectField).getDescribe().isAccessible() && fieldMap.get(field.SObjectField).getDescribe().isUpdateable()){
                             if(fielddataType == Schema.DisplayType.PERCENT || fielddataType == Schema.DisplayType.CURRENCY || fielddataType == Schema.DisplayType.Double){
@@ -731,7 +545,7 @@ public with sharing class updateFieldsController {
                                 try{
                                     sobj.put(field.SObjectField, date.parse(addMap.get('CSV'+field.csvfield).removeEnd(' 00:00:00').trim()));      
                                 }catch(Exception e){
-                                    System.debug('Error ' + e.getMessage());
+                                return 'Error '+e.getMessage();
                                 }
                             } 
                             else if(fielddataType == Schema.DisplayType.DATETIME){
@@ -739,32 +553,31 @@ public with sharing class updateFieldsController {
                                 try {
                                      sobj.put(field.SObjectField, (DateTime)JSON.deserialize('"' + ((addMap.get('CSV'+field.csvfield).trim()).substringBefore('.') + '.000-00:00') + '"', DateTime.class)); 
                                 } catch (Exception e) {
-                                     System.debug('Error for date/Time '+ e.getMessage());
+                                    return 'Error '+e.getMessage();
                                 }
                                 // jenishgangani 15/02 insert datetime field
                                 // sobj.put(field.SObjectField, DATETIME.valueof(lstStr.get(listCSv)));  
                             }
                             else if(fielddataType == Schema.DisplayType.TIME){
-                                // ---- jenish gangani for convert time 2/3/23
-                                try {
-                                      String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
-                                  Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
-                                                                     ,Integer.valueOf(strTimeSplit[1]) //min
-                                                                     ,0                                //sec
-                                                                     ,0); 
-                                sobj.put(field.SObjectField, timeChange); 
-                                } catch (Exception e) {
-                                    System.debug('Error for Time '+ e.getMessage());
-                                } 
-                                // ---- jenish gangani for convert time 2/3/23
-                                    
+                                               // ---- jenish gangani for convert time 2/3/23
+                                               try {
+                                                String[] strTimeSplit = (addMap.get('CSV'+field.csvfield).trim()).split(':');
+                                            Time timeChange = Time.newInstance( Integer.valueOf(strTimeSplit[0]) //hour
+                                                                               ,Integer.valueOf(strTimeSplit[1]) //min
+                                                                               ,0                                //sec
+                                                                               ,0); 
+                                          sobj.put(field.SObjectField, timeChange); 
+                                          } catch (Exception e) {
+                                            return 'Error '+e.getMessage();
+                                          } 
+                                          // ---- jenish gangani for convert time 2/3/23
                             }
                             else if(fielddataType == Schema.DisplayType.Boolean){
                                 sobj.put(field.SObjectField, Boolean.valueof(addMap.get('CSV'+field.csvfield).trim()));  
                             }
                             else{
                                 sobj.put(field.SObjectField, addMap.get('CSV'+field.csvfield));  
-                                System.debug(addMap.get('CSV'+field.csvfield));
+                                // System.debug(addMap.get('CSV'+field.csvfield));
                             }                            
                         }                        
                     }
@@ -773,6 +586,7 @@ public with sharing class updateFieldsController {
                 objList.add(sobj);    
             // }
         }
+        System.debug('objList==>'+ objList);
         return JSON.serialize(objList);
     }
 
@@ -786,9 +600,11 @@ public with sharing class updateFieldsController {
         System.debug('Data=='+data);
         System.debug('FieldToUpdateList=='+FieldToUpdateList);
         System.debug('selectObjectName=='+selectObjectName);
+       
 
         List<SObject>                   dataList             = (List<SObject>)                   System.JSON.deserialize(data, List<SObject>.class);
         List<uploadCsvFileJsonWrapper>  FieldToUpdateListWpr = (List<uploadCsvFileJsonWrapper>)  System.JSON.deserialize(FieldToUpdateList, List<uploadCsvFileJsonWrapper>.class);
+        System.debug('datalist==>804==>'+ dataList);
         
         List<String> csvField = new List<String>();
         
@@ -844,6 +660,8 @@ public with sharing class updateFieldsController {
 public class pairWrapper1{
         @AuraEnabled public List<string> apiNameList{get; set;}
         @AuraEnabled public List<pairWrapper> pairWrapperList{get; set;}
+        @AuraEnabled public Map<String, String> fieldMap1{get; set;}
+        // @AuraEnabled public Schema.SObjectType sobj11{get; set;}
     }
     // -----------jenish gangani
 
@@ -873,7 +691,6 @@ public class pairWrapper1{
             this.theMap    = theMap;
         }
     }
-
     // ---------jenish gangani 2/3/23
     @AuraEnabled
     public static Void sendemail(String name, String email, String subject, String body){

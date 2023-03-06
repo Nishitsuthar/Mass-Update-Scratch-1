@@ -9,7 +9,6 @@
 
    <!--  jenish gangani 9/2/23 event  -->
     <aura:registerEvent name="disableNextButton" type="c:disableButtonEvent" />
-    <aura:registerEvent name="GoogleDriveEvent" type="c:GoogleDriveEvent" />
      
   
 

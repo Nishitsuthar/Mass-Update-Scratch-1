@@ -15,16 +15,7 @@
                         label: storeResponse[i].split(',')[1]
                     });
                 }
-                // function myFunction() {
-                //     cars.sort(function(a, b){
-                //       let x = a.type.toLowerCase();
-                //       let y = b.type.toLowerCase();
-                //       if (x < y) {return -1;}
-                //       if (x > y) {return 1;}
-                //       return 0;
-                //     });
-                //     displayCars();
-                //   }
+
 
                 // JENISH GANGANI
                 arr.sort((a, b) => {
@@ -65,7 +56,7 @@
 
     onChangeObject: function (component, event, helper) {
         console.log('onChangeObject');
-        component.set("v.IsSpinner", false);
+        component.set("v.IsSpinner", true);
         var getFieldSet = component.get("c.getObjectSelectField");
         var selectedObject = component.get("v.selectedObject") + '';
         getFieldSet.setParams({
@@ -75,40 +66,33 @@
             var result = response.getState();
             console.log('result===', result);
             if (result === 'SUCCESS' || result === 'DRAFT') {
-                console.log('In Success If===');
-                const obj = response.getReturnValue();
-                console.log('aass::' + response.getReturnValue().hasOwnProperty('pairWrapperList'));
-                console.log('aass::', typeof (response.getReturnValue()));
+                console.log('aass::', response.getReturnValue());
                 // console.log(response.getReturnValue()[0].apiNameList);
                 console.log(response.getReturnValue()[0].pairWrapperList);
                 component.set("v.fieldList", response.getReturnValue()[0].pairWrapperList);
                 component.set("v.apiListofObject", response.getReturnValue()[0].apiNameList);
 
-                // var apiList = response.getReturnValue()[0].apiNameList;
+                let objList = response.getReturnValue()[0].pairWrapperList;
+                let fieldTypeObj = {};
+                objList.forEach(e => {
+                    fieldTypeObj[e.apiName] = e.fieldType;
+                });
+                component.set('v.fieldTypeObj', fieldTypeObj);
+
+                var fieldType = response.getReturnValue()[0].fieldMap1;
+                component.set('v.schema', fieldType);
+
                 var apiList = component.get("v.apiListofObject")
                 console.log('apiame::' + apiList);
-                // apiList = apiList.toUpperCase();
-                // var headerData = component.get("v.header");
-                // console.log('headerData:::' + headerData);
-                // let a = apiList.includes(headerData[0]);
-                // console.log('a' + a);
-                // to check when header is not avalible in csv file 
-                // if (!apiList.includes(headerData[0])) {
-                //     helper.showToast(component, "Info", "Info!", "Check Your first Recode Or Object");
-                //     component.set("v.stepOneNextButton", true);
-                // } else {
-                //     component.set("v.stepOneNextButton", false);
+                component.set("v.IsSpinner", false);
 
-                // }
 
             } else {
+                component.set("v.IsSpinner", false);
                 helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong OnChangeObject");
             }
         });
         $A.enqueueAction(getFieldSet);
-        debugger;
-        component.set("v.IsSpinner", false);
-
     },
 
     callNexthandle: function (component, event, helper) {
@@ -302,14 +286,16 @@
         });
         action.setCallback(this, function (response) {
             var result = response.getState();
+            console.log('erroe ' + response.getError());
             console.log('result :::::' + result)
             if (result == 'SUCCESS') {
                 var res = response.getReturnValue();
-                console.log('res==>', res);
                 if (res.startsWith('Error Invalid')) {
                     helper.showToast(component, "Info", "Info!", res);
                     component.set("v.stepOneNextButton", true);
                 } else {
+                    // console.log('check the typeof:::;'+ typeof())
+                    console.log('res::::' + JSON.stringify(res));
                     component.set("v.updateFieldList", res);
                 }
             } else {
@@ -334,48 +320,30 @@
             var result = response.getState();
 
             if (result == 'SUCCESS') {
+                component.set("v.IsSpinner", true);
                 var res = response.getReturnValue();
+                console.log('res==>' + res);
                 console.log('resfor insert::::' + JSON.stringify(res));
                 if (res.startsWith('Error Invalid')) {
                     helper.showToast(component, "Info", "Info!", res);
                     component.set("v.stepOneNextButton", true);
                 } else {
-                    component.set("v.updateFieldList", res);
+
+                    let insertData = response.getReturnValue();
+                    component.set("v.insertFieldList", insertData);
+                    console.log('component::==>' + component.get("v.insertFieldList"));
                 }
+
+
             } else {
                 helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong setSobjectforInsertRecord");
             }
             component.set("v.IsSpinner", false);
+
         });
         $A.enqueueAction(action);
     },
-    // --------jenish gangani 11/02 for insert data 
 
-
-    // --------jenish gangani 11/02 for insert data 
-    // setSobjectforInsertRecord: function (component, event, helper, ResultOfAllData, sfPushDataListJson, selectObjectName) {
-
-    //     var action = component.get('c.setSobjectListForInsert');
-
-    //     action.setParams({
-    //         'allData': ResultOfAllData,
-    //         'FieldToUpdateList': sfPushDataListJson,
-    //         'selectObjectName': selectObjectName,
-    //     });
-    //     action.setCallback(this, function (response) {
-    //         var result = response.getState();
-    //         if (result == 'SUCCESS') {
-    //             var res = response.getReturnValue();
-    //             console.log('resfor insert::::' + JSON.stringify(res));
-    //             component.set("v.updateFieldList", res);
-    //         } else {
-    //             helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong setSobjectforInsertRecord");
-    //         }
-    //         component.set("v.IsSpinner", false);
-    //     });
-    //     $A.enqueueAction(action);
-    // },
-    // --------jenish gangani 11/02 for insert data 
 
 
     getSobjectList: function (component, event, helper, resultdata, query, selectObjectName, tablePushDataListJson, headerData, sfPushDataListJson, selectedListOfFields) {
@@ -558,6 +526,132 @@
         var sfPushDataListJson = JSON.stringify(sfPushData);
         console.log('sfPushDataListJson:::::' + sfPushDataListJson);
 
+        let IndexFieldCSV = new Map();
+
+        for (let i = 0; i < headerData.length; i++) {
+            IndexFieldCSV.set(headerData[i], i);
+        }
+
+        let dataList = JSON.parse(tableDataString);
+        let tablePushDataListJsonDeserialize = JSON.parse(tablePushDataListJson);
+        let FieldToUpdateListWpr = JSON.parse(sfPushDataListJson);
+
+        console.log('IndexFieldCSV=====' + IndexFieldCSV);
+        console.log('dataList 2nd======' + dataList);
+        console.log('tablePushDataListJsonDeserialize 2nd======' + tablePushDataListJsonDeserialize);
+        console.log('FieldToUpdateListWpr 2nd =====' + FieldToUpdateListWpr);
+
+
+
+        // var objSchema = sforce.connection.describeSObject('Account');
+        // console.log('objectSchema==>' + objSchema);
+
+
+
+        var keyValueMap = new Map();
+        var csvAllDataMap = new Map();
+        var selectedListOfFields = selectedFieldsListArray;
+
+        for (let ucv of tablePushDataListJsonDeserialize) {
+            keyValueMap.set(ucv.SObjectField, new Set());
+        }
+        console.log('121== keyvalueMap==>' + keyValueMap);
+
+        if (!selectedListOfFields.includes('Id')) {
+            selectedListOfFields.push('Id');
+        }
+        console.log('selected field===' + selectedListOfFields);
+
+        let mnList = [];
+        let j = 0;
+        let strKey;
+        var strValue = new Map();
+        let k = 0;
+        const fieldTypeObject = component.get('v.fieldTypeObj');
+
+        for (let data of dataList) {
+            strKey = '';
+            strValue = new Map();
+            k = 0;
+            data = data.trim();
+            if (data !== '') {
+                if (data.endsWith(',')) {
+                    data += ' ';
+                }
+
+                let StringData = data.split(",");
+
+
+                for (let ucv of tablePushDataListJsonDeserialize) {
+                    // console.log('IndexFieldCSV.get(ucv.csvfield)===148==>' + IndexFieldCSV.get(ucv.csvfield));
+                    if (IndexFieldCSV.get(ucv.csvfield) !== undefined) {
+                        if (keyValueMap.has(ucv.SObjectField)) {
+
+                            let fieldType = fieldTypeObject[ucv.SObjectField];
+                            // console.log('field type-->'+ fieldType);
+
+                            let celldata = StringData[IndexFieldCSV.get(ucv.csvfield)];
+                            if (fieldType === 'DATE') {
+                                strKey += String(date.parse(celldata)).replace(/\s\d{2}:\d{2}:\d{2}/, "").trim() + '^';
+                            } else {
+                                if (celldata.trim().replace(/"/g, '') && celldata.trim().replace(/"/g, '')) {
+                                    // console.log(celldata.trim().removeStart('"').removeEnd('"'));
+                                    strKey += celldata.trim() + '^';
+                                    // console.log('strKey===161==>', strKey);
+                                } else {
+                                    strKey += celldata.trim() + '^';
+                                    // console.log('strKey===164==>', strKey);
+                                }
+                            }
+                            keyValueMap.get(ucv.SObjectField).add(celldata.trim());
+                            // console.log('keyValueMap====>',keyValueMap);
+                            // }
+                        }
+                    }
+                }
+
+                for (let field of FieldToUpdateListWpr) {
+                    if (IndexFieldCSV.get(field.csvfield) != null) {
+                        let celldata = StringData[IndexFieldCSV.get(field.csvfield)].trim();
+                        if (celldata.replace(/"/g, "") && celldata.replace(/"/g, "")) {
+                            strValue.set('CSV' + field.csvfield, celldata.replace(/""/g, ''));
+                        } else {
+                            strValue.set('CSV' + field.csvfield, celldata);
+                        }
+                    }
+                }
+                // console.log('192 ==> strValue ==> ', strValue);
+                csvAllDataMap.set(strKey.slice(0, -1), strValue);
+                // console.log('csvAllDataMap===>', csvAllDataMap);
+
+            }
+            // var csvdata = JSON.stringify(csvAllDataMap);
+
+
+        }
+
+
+
+        var obj1 = {};
+        for (let [key, value] of keyValueMap) {
+            obj1[key] = Array.from(value);
+        }
+        var keyValueMap1 = JSON.stringify(obj1);
+
+        const csvAllDataObject = {};
+        csvAllDataMap.forEach((value, key) => {
+            csvAllDataObject[key] = Object.fromEntries(value.entries());
+            // console.log('csvAllDataObject[key] ' + csvAllDataObject[key]);
+
+        });
+        // var csvAllDataMap1 = JSON.stringify(obj2);
+        var csvAllDataMap1 = JSON.stringify(csvAllDataObject);
+
+
+        // --------------------------------------------------- jenish gangani 27/02
+
+
+
         action.setParams({
             'selectedListOfFields': selectedFieldsListArray,
             'selectObjectName': selectObjectName,
@@ -565,19 +659,21 @@
             'tableData': tableDataString,
             'tablePushDataListJson': tablePushDataListJson,
             'FieldToUpdateList': sfPushDataListJson,
+            'keyValueMap': keyValueMap1,
+            'csvAllDataMap': csvAllDataMap1,
         });
 
         action.setCallback(this, function (response) {
             var resultFull = response.getState();
-            console.log('resultFulll::::::' + resultFull);
 
             if (resultFull === 'SUCCESS' || resultFull === 'DRAFT') {
                 var res = response.getReturnValue();
                 var result = res[0];
-                console.log('result::::::' + JSON.stringify(result));
+                console.log('res==>' + JSON.stringify(res[0]));
                 helper.getSobjectList(component, event, helper, result['theMap'], result['theQuery'], selectObjectName, tablePushDataListJson, headerData, sfPushDataListJson, selectedFieldsListArray);
 
             } else {
+                console.log('err ' + response.getError());
                 component.set("v.IsSpinner", false);
                 helper.showToast(component, "Error", "Failed!", "Error accur, Something went wrong nextWritequery");
             }
@@ -610,16 +706,18 @@
         });
         $A.enqueueAction(action);
     },
-    saveRecordsToSFForInsert: function (component, event, helper) {
+    saveRecordsToSFForToInsert: function (component, event, helper) {
         component.set("v.IsSpinner", true);
         var action = component.get('c.insertRecord');
-        var data = component.get("v.updateFieldList");
+        var dataOfInsert = component.get("v.insertFieldList");
         var sfPushData = component.get('v.FieldToUpdateList');
         var selectObjectName = component.get("v.selectedObject");
         var sfPushDataListJson = JSON.stringify(sfPushData);
+        console.log('component==>' + component.get("v.insertFieldList"));
+        console.log('dataOfInsert==>', dataOfInsert);
 
         action.setParams({
-            'data': data,
+            'data': dataOfInsert,
             'FieldToUpdateList': sfPushDataListJson,
             'selectObjectName': selectObjectName
         });
@@ -794,7 +892,7 @@
                 component.set("v.dataSize", ListData.length);
                 component.set('v.TableLightningData', TempListData);
 
-                component.set("v.IsSpinner", false);
+                // component.set("v.IsSpinner", false);
                 helper.setSobjectforInsertRecord(component, event, helper, ResultOfAllData, sfPushDataListJson, selectObjectName);
 
 

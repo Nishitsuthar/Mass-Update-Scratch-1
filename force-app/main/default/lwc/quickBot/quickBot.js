@@ -15,6 +15,10 @@ export default class QuickBot extends LightningElement {
     @track first_icon = false;
     @track wel_message = false;
     @track feedback_form = false;
+    @track showquickbot = false;
+    @track showComponent = true;
+
+
     quickbotname;
     quickbotemail;
     quickbotmessage;
@@ -77,6 +81,12 @@ export default class QuickBot extends LightningElement {
             this.email_msg = true;
             console.log('selectedValues:- ', this.quickbotemail);
             console.log('selectedValues:- ' + typeof this.quickbotemail);
+            const value = false;
+            const valueChangeEvent = new CustomEvent("valuechange", {
+              detail: { value }
+            });
+            // Fire the custom event
+            this.dispatchEvent(valueChangeEvent);
             sendemail({ name: this.quickbotname, email: this.quickbotemail, subject: this.quickbotsubject, body: this.quickbotmessage })
                 .then(result => {
                     this.emailsend = true;
@@ -96,7 +106,14 @@ export default class QuickBot extends LightningElement {
         console.log('quickbotsubject -->', this.quickbotsubject);
     }
 
-    quickboe_close() {
-        this.dispatchEvent(new CustomEvent('botclose'));
+    quickboe_close(event) {
+        this.showComponent = !this.showComponent;
+        const value = false;
+        const valueChangeEvent = new CustomEvent("valuechange", {
+          detail: { value }
+        });
+        // Fire the custom event
+        this.dispatchEvent(valueChangeEvent);
+
     }
 }
