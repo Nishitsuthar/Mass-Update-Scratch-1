@@ -102,10 +102,10 @@ public with sharing class updateFieldsController {
 
         Map<String, Integer> IndexFieldCSV = new Map<String, Integer>();
         
-        Integer x = 0;
+        Integer index = 0;
         for(String s : headerData){
-            IndexFieldCSV.put(s, x);
-            x++;
+            IndexFieldCSV.put(s, index);
+            index++;
         }
 
         System.debug('IndexFieldCSV::::::'+ IndexFieldCSV);
@@ -117,7 +117,7 @@ public with sharing class updateFieldsController {
         Map<String,Map<String,String>>  csvAllDataMap   = new Map<String,Map<String,String>>();
         
       
-        Integer j = 0;
+        Integer indexofInsert = 0;
         
         String strKey;
         Map<String,String> strValue = new Map<String,String>(); 
@@ -129,8 +129,9 @@ public with sharing class updateFieldsController {
             strValue = new Map<String, String>();
             data=data.trim(); 
             if(data != ''){  
-                if(data.endsWith(',')) data += ' ';
-                
+                if(data.endsWith(',')) {
+                    data += ' ';
+                }
                 List<String> StringData = data.split(',(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)');
                
 
@@ -145,12 +146,12 @@ public with sharing class updateFieldsController {
                         }                       
                     }
                 }
-                String sInteger = String.valueOf(j);
+                String sInteger = String.valueOf(indexofInsert);
                 csvAllDataMap.put(sInteger, strValue);
                
             }
          
-             j++;
+             indexofInsert++;
 
         }
         
@@ -245,9 +246,9 @@ public with sharing class updateFieldsController {
         
         //Showing the fields which data have to Showing from salesforce
         if(selectedListOfFields != null && selectedListOfFields.size() > 0){
-            for(String fd : selectedListOfFields){
-                if(!listSql.contains(fd)){
-                    listSql.add(fd);
+            for(String selectFieldOfCheckBox : selectedListOfFields){
+                if(!listSql.contains(selectFieldOfCheckBox)){
+                    listSql.add(selectFieldOfCheckBox);
                 }
             }
         }
@@ -331,13 +332,15 @@ public with sharing class updateFieldsController {
 
         	
       
-        if(!selectedListOfFields.contains('Id'))    selectedListOfFields.add('Id');
+        if(!selectedListOfFields.contains('Id')){  
+             selectedListOfFields.add('Id');
+        }
         
         Map<String, Integer> IndexFieldCSV = new Map<String, Integer>();
-        Integer x = 0;
+        Integer index = 0;
         for(String s : headerData){
-            IndexFieldCSV.put(s, x);
-            x++;
+            IndexFieldCSV.put(s, index);
+            index++;
         }
         try {
             List<SObject> SObjectList = database.query(query);  
@@ -390,6 +393,7 @@ public with sharing class updateFieldsController {
                     csvData.put(str,lstStr);
                 }
             }
+
         } catch (Exception e) {
             System.debug('Error ' + e.getMessage() + e.getLineNumber());
         }
@@ -472,7 +476,8 @@ public with sharing class updateFieldsController {
             }
         }
         System.debug('objList===>645===>'+ objList);
-        return JSON.serialize(objList);
+        String objListValue = JSON.serialize(objList);
+        return objListValue;
     }
 
     // --------- jenish gangani 11/02 convert Sobject

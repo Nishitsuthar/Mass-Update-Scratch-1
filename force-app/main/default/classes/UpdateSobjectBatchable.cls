@@ -6,7 +6,7 @@
 
 global class UpdateSobjectBatchable implements Database.Batchable<sObject>, Database.Stateful {
 
-    global Integer recordsProcessed = 0;
+    // global Integer recordsProcessed = 0;
     public List<sObject> lstSobject;
     public String strcsv;
     public String sObjectName;
@@ -37,31 +37,32 @@ global class UpdateSobjectBatchable implements Database.Batchable<sObject>, Data
             List<String> errorList = new List<String>();
             Map<String, String> errorDetailMap = new Map<String, String>();
             
-            for (Integer i=0;i<resultList.size();i++){
-                System.debug('resultList=='+resultList);
-                if(resultList[i].isSuccess()) {
-                    System.debug('success===');
-                    successList.add(resultList[i].getId());
-                } 
-                else if(!resultList[i].isSuccess()) {
-                    System.debug('Error===');
-                    errorList.add(lstSobject.get(i).Id); 
-                    Database.Error errors =  resultList[i].getErrors().get(0);
-                    errorDetailMap.put(lstSobject.get(i).Id , errors.getMessage());
+            if(resultList.size() > 0){
+                for (Integer i=0;i<resultList.size();i++){
+                    if(resultList[i].isSuccess()) {
+                        successList.add(resultList[i].getId());
+                    } 
+                    else if(!resultList[i].isSuccess()) {
+                        System.debug('Error===');
+                        errorList.add(lstSobject.get(i).Id); 
+                        Database.Error errors =  resultList[i].getErrors().get(0);
+                        errorDetailMap.put(lstSobject.get(i).Id , errors.getMessage());
+                    }
                 }
-            }
-            
-			System.debug('success Id=='+successList);
-			System.debug('Error Id=='+errorList);          
-            
-            String querySuccess = ' SELECT ' + strcsv + ' FROM ' + sObjectName + ' WHERE Id =: successList ';
+                
+        }
+			System.debug('success List=='+successList);
+			System.debug('Error List=='+errorList);          
+            if(!successList.isEmpty()){
+                String querySuccess = ' SELECT ' + strcsv + ' FROM ' + sObjectName + ' WHERE Id =: successList ';
             List<SObject> sList = (database.query(querySuccess));
-            SObjectType r = ((SObject)(Type.forName('Schema.'+sObjectName).newInstance())).getSObjectType();
-            DescribeSObjectResult d = r.getDescribe();
+            SObjectType objectName = ((SObject)(Type.forName('Schema.'+sObjectName).newInstance())).getSObjectType();
+            DescribeSObjectResult objectNameDe = objectName.getDescribe();
+            if(sList.isEmpty())
             for(SObject sobj : sList){
                 
                 for(String csvName : csvfield){ 
-                    String fieldType = String.valueOf(d.fields.getMap().get(csvName).getDescribe().getType());
+                    String fieldType = String.valueOf(objectNameDe.fields.getMap().get(csvName).getDescribe().getType());
                     if(sobj.get(csvName) != null){
                         if(fieldType == 'DATE'){
                             String dateStr = String.valueOf(sobj.get(csvName)).removeEnd(' 00:00:00');
@@ -83,23 +84,26 @@ global class UpdateSobjectBatchable implements Database.Batchable<sObject>, Data
                     } 
                 }
                 csvValue = csvValue + ' Updated Record ' + '\n';
-            }    
-            
-            
-            String queryError = ' SELECT ' + strcsv + ' FROM ' + sObjectName + ' WHERE Id =: errorList ';
-            List<SObject> eList = (database.query(queryError));
-            
-            for(SObject sobj : eList){
-                for(String csvName : csvfield){
-                    if(sobj.get(csvName) != null){
-                        csvErrorValue += sobj.get(csvName) + ',';
-                    }else{
-                        csvErrorValue += '' + ',';
-                    } 
-                }
-                csvErrorValue += 'error : ' + errorDetailMap.get(sobj.get('Id')+'');
-                csvErrorValue += '\n';
+            }   
             }
+             
+            if(!errorList.isEmpty()){
+                String queryError = ' SELECT ' + strcsv + ' FROM ' + sObjectName + ' WHERE Id =: errorList ';
+             List<SObject> eList = (database.query(queryError));
+            
+                for(SObject sobj : eList){
+                    for(String csvName : csvfield){
+                        if(sobj.get(csvName) != null){
+                        csvErrorValue += sobj.get(csvName) + ',';
+                        }else{
+                        csvErrorValue += '' + ',';
+                        } 
+                    }
+                    csvErrorValue += 'error : ' + errorDetailMap.get(sobj.get('Id')+'');
+                    csvErrorValue += '\n';
+                }
+            }
+            
         }
     }    
     // send mail to owner with success and error data
@@ -124,7 +128,7 @@ global class UpdateSobjectBatchable implements Database.Batchable<sObject>, Data
         
         try{
             Messaging.SingleEmailMessage email =new Messaging.SingleEmailMessage();
-            String[] toAddresses = new list<string> { 'jenish.g@mvclouds.com' };
+            String[] toAddresses = new list<string> { UserInfo.getUserEmail() };
             String subject = sObjectName + ' Operation Completed successfully.' ;
             email.setSubject(subject);
             email.setHtmlBody('Dear '+ UserInfo.getFirstName() + ' ' + UserInfo.getLastName() +',<br /><br />'
@@ -171,15 +175,16 @@ global class UpdateSobjectBatchable implements Database.Batchable<sObject>, Data
             cvList = [SELECT Id, ContentDocumentId FROM ContentVersion WHERE Id IN: cvList];
             ContentWorkspace ws = [SELECT Id, RootContentFolderId FROM ContentWorkspace WHERE Name = 'Mass Update' LIMIT 1];
             
-            
+                        List<ContentDocumentLink> cdlList = new List<ContentDocumentLink>();
             for(ContentVersion cvl : cvList){
                 ContentDocumentLink cdl = new ContentDocumentLink();
                 cdl.ContentDocumentId = cvl.ContentDocumentId;
                 cdl.ShareType = 'I';
                 cdl.Visibility = 'AllUsers';
                 cdl.LinkedEntityId = ws.Id;
-                insert cdl;    
+                cdlList.add(cdl);
             }
+            insert cdlList;    
         }else{
             System.debug('User does not have access to Content Version!');
         }

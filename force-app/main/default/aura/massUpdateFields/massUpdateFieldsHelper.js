@@ -67,7 +67,7 @@
                 let fieldTypeObj = {};
                 objList.forEach(e => {
                     fieldTypeObj[e.apiName] = e.fieldType;
-                }); 
+                });
                 var fieldType = response.getReturnValue()[0].fieldMap1;
 
                 component.set("v.fieldList", response.getReturnValue()[0].pairWrapperList);
@@ -114,7 +114,7 @@
         // -----jenish gangani 12/02 
 
         else if (headercheck) {
-            helper.showToast(component, "Info", "Info!", "In your header, only include the API or label name.");
+            helper.showToast(component, "Info", "Info!", "In your header, only include the API name.");
         }
         // -----jenish gangani 12/02 
 
@@ -374,7 +374,7 @@
                         for (var val in ResultOfAllData[key]) {
                             if (val.startsWith("SF")) {
                                 if (val !== "SFId") {
-                                    sfCount++;
+                                    // sfCount++;
                                     var data = {};
                                     data['label'] = val.replace('SF', '');
                                     data['fieldName'] = val;
@@ -386,7 +386,7 @@
                         }
                         for (var val in ResultOfAllData[key]) {
                             if (val.startsWith("CSV")) {
-                                csvCount++;
+                                // csvCount++;
                                 var data = {};
                                 data['label'] = val.replace('CSV', '');
                                 data['fieldName'] = val;
@@ -754,7 +754,7 @@
 
                         for (var val in ResultOfAllData[key]) {
                             if (val.startsWith("CSV")) {
-                                csvCount++;
+                                // csvCount++;
                                 var data = {};
                                 data['label'] = val.replace('CSV', '');
                                 data['fieldName'] = val;

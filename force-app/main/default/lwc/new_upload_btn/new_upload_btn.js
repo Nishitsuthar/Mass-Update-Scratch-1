@@ -3,8 +3,6 @@ import { loadScript } from 'lightning/platformResourceLoader';
 import PARSER from '@salesforce/resourceUrl/PapaParse';
 import sheetjs from '@salesforce/resourceUrl/sheetjsNew';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import getVFOrigin from '@salesforce/apex/URL_Controller.getVFOrigin';
-// import PageReference from '@salesforce/schema/PageReference';
 
 
 
@@ -18,59 +16,6 @@ export default class new_upload_btn extends LightningElement {
 
     get acceptedFormats() {
         return ['.csv', '.xls', '.xlsx'];
-    }
-
-    connectedCallback() {
-        console.log('connected call back');
-
-        var meta = document.createElement("meta");
-        meta.setAttribute("name", "viewport");
-        meta.setAttribute("content", "width=device-width,initial-scale=1.0");
-        console.log(meta);
-
-
-        getVFOrigin()
-            .then(result => {
-                const updatedUrl = result.replace(".my.salesforce.com", ".vf.force.com");
-                const matchIndex = updatedUrl.indexOf("-ed");
-                var VfOrigin = updatedUrl.substring(0, matchIndex + 3) + "--c" + updatedUrl.substring(matchIndex + 3);
-                VfOrigin = 'https://mvclouds-dev-ed--mvmu.vf.force.com';
-                window.addEventListener("message", (message) => {
-                    if (message.origin !== VfOrigin) {
-                        //Not the expected origin
-                        return;
-                    }
-                    //handle the message
-                    if (message.data.name === "new_upload_btn") {
-                        let fileName = message.data.finame;
-                        this.fileName = message.data.finame;
-                        this.sendFileName(this.fileName);
-                        let extension = fileName.split('.').pop();
-
-                        if (extension == 'csv') {
-                            console.log('csv');
-                            var data1 = Papa.parse(message.data.payload, {
-                                header: true
-                            });
-                            this.progressBar();
-                            var headerValue = data1.meta.fields;
-                            var rowData = data1.data;
-                            this.headerCheck(headerValue);
-                            this.dataStoreTable(rowData);
-                        } else {
-                            console.log('xlsx');
-                            this.progressBar();
-                            var rowData = this.parseExcelFile(message.data.payload);
-                        }
-                    }
-                });
-
-                // return result;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
     }
 
     renderedCallback() {
@@ -94,38 +39,9 @@ export default class new_upload_btn extends LightningElement {
             console.log('error mesg--> ' + error);
         }
     }
-    handleClick(event) {
-        const iframe = this.template.querySelector('.dropboxdata');
-        console.log('iframe==>', iframe.html);
-        console.log('iframe==>', iframe.document);
 
-        console.log('iframe==>', iframe.innerHTML);
-
-        console.log('iframe==>', iframe.value);
-
-        const iframe1 = iframe.querySelector('.newId');
-        console.log('iframe1==>' + iframe1);
-
-
-        // frameObj.contentWindow.document.body.innerHTML;
-        try {
-            var frameObj = this.template.querySelector('.dropboxdata');
-            console.log('free=>', frameObj);
-            var frameContent = frameObj.contentWindow.document.body;
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
 
     handleUploadFinished(event) {
-        // output: the HTML content of the iFrame
-
-
-        // var elmnt = iframe.contentWindow.document.querySelector('.newId');
-        // const iframeWindow = iframe.contentWindow;
-        // console.log('iframdata==>' + iframeWindow);
-        // Get the list of uploaded files
         try {
             if (event.detail.files.length > 0) {
                 const file = event.detail.files[0];
@@ -302,9 +218,7 @@ export default class new_upload_btn extends LightningElement {
         for (let i = 0; i < rowObj.length; i++) {
             arr2.push(Object.values(rowObj[i]));
         }
-        // console.log('arr2 Name ' + arr2);
-        const newArray = arr2.map(subarray => subarray.join(','));
-        let value = newArray;
+        let value = arr2.map(subarray => subarray.join(','));
         const event = new CustomEvent('tabledata', { detail: { value } });
         this.dispatchEvent(event);
 
@@ -324,8 +238,6 @@ export default class new_upload_btn extends LightningElement {
                     header: true,
                     skipEmptyLines: 'greedy'
                 });
-                // console.log('data1 ' + JSON.stringify(data1));
-                // var headerValue = Object.keys(rowObject[0]);
                 var headerValue = data1.meta.fields;
                 const rowData = data1.data;
                 this.headerCheck(headerValue);
