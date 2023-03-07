@@ -128,3 +128,7 @@
         margin: 0;
     }
 }
+
+.THIS .button-css {
+    display: inline-block;
+}

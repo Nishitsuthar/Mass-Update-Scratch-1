@@ -6,27 +6,29 @@
             if (state === "SUCCESS") {
                 var arr = [];
                 var storeResponse = response.getReturnValue();
-                for (var i = 0; i < storeResponse.length; i++) {
-                    arr.push({
-                        value: storeResponse[i].split(',')[0],
-                        label: storeResponse[i].split(',')[1]
-                    });
-                }
+                if (storeResponse.length > 0) {
+                    for (var i = 0; i < storeResponse.length; i++) {
+                        arr.push({
+                            value: storeResponse[i].split(',')[0],
+                            label: storeResponse[i].split(',')[1]
+                        });
+                    }
 
-                // JENISH GANGANI
-                arr.sort((a, b) => {
-                    let nameA = a.label.toUpperCase(); // ignore upper and lowercase
-                    let nameB = b.label.toUpperCase(); // ignore upper and lowercase
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-                    return 0;
-                });
-                // JENISH GANGANI     
-                component.set("v.ObjectListMain", arr);
+                    // JENISH GANGANI
+                    arr.sort((a, b) => {
+                        let nameA = a.label.toUpperCase(); // ignore upper and lowercase
+                        let nameB = b.label.toUpperCase(); // ignore upper and lowercase
+                        if (nameA < nameB) {
+                            return -1;
+                        }
+                        if (nameA > nameB) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    // JENISH GANGANI     
+                    component.set("v.ObjectListMain", arr);
+                }
             }
         });
         $A.enqueueAction(action);
@@ -62,20 +64,23 @@
             }
             if (result === 'SUCCESS' || result === 'DRAFT') {
                 console.log('aass::', response.getReturnValue());
+                console.log('response.getReturnValue()' + response.getReturnValue());
 
-                let objList = response.getReturnValue()[0].pairWrapperList;
+                let objList = response.getReturnValue().pairWrapperList;
+                console.log('objList==>', objList);
                 let fieldTypeObj = {};
                 objList.forEach(e => {
                     fieldTypeObj[e.apiName] = e.fieldType;
                 });
-                var fieldType = response.getReturnValue()[0].fieldMap1;
+                var fieldType = response.getReturnValue().fieldMap1;
 
-                component.set("v.fieldList", response.getReturnValue()[0].pairWrapperList);
-                component.set("v.apiListofObject", response.getReturnValue()[0].apiNameList);
-                component.set("v.labelListofObject", response.getReturnValue()[0].labelNameList);
+                component.set("v.fieldList", response.getReturnValue().pairWrapperList);
+                component.set("v.apiListofObject", response.getReturnValue().apiNameList);
+                component.set("v.labelListofObject", response.getReturnValue().labelNameList);
                 component.set('v.fieldTypeObj', fieldTypeObj);
                 component.set('v.schema', fieldType);
                 component.set("v.IsSpinner", false);
+
 
 
             } else {

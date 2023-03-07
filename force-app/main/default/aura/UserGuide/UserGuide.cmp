@@ -1,16 +1,12 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
-    
     <aura:attribute name="currentStep" type="String" default="not step0" />
     <aura:attribute name="value" type="Boolean" default="false"/>            
     <aura:attribute name="valueindb" type="Boolean" default="false"/>
     
     <div style="width: 80%; align-items:center;" class="">
         <lightning:tabset variant="vertical" aura:id="tabs">
-            
-            
             <!--PREREQUISITE TAB 2-->
             <lightning:tab label="PREREQUISITE">
-                
                 <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
                     <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:fulfillment_order" alternativeText="Prerequisite" title="Prerequisite" size="small"/>&nbsp;&nbsp;Prerequisite</div>
                 </div>
@@ -19,25 +15,23 @@
                     <div style="font-size:15px;margin-bottom:5%;">
                         <p style="text-align: justify;">
                             Before we start using the mass update, we need to prepare our data which needs to be updated. To prepare the data we need to follow the steps shown below. 
-                            Mass Update woks for only CSV files and no other file format. If you have an excel sheet, you need to connvert it into the CSV formate first.
+                            Mass Update accepts CSV and Excel files.
                         </p>
                         <br/>
-                        
                         <p>
-                            <div style="font-size:20px; color:#3c4ca3;">How to prepare a CSV file:</div><br/>
+                            <div style="font-size:20px; color:#3c4ca3;">How to prepare a CSV/Excel file:</div><br/>
                             <div style="margin-left: 5%;">
-                                1. Open Excel sheet<br/><br/>
+                                1. Open Excel sheet.<br/><br/>
                                 2. Prepare your data for one object.<br/>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. First line should be name of the field(It would be better if it is same as field name as Salesforce object).<br/>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Data which needs to be updated should start from line number 2.<br/>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. Do not leave any row blank<br/><br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Header always should be the API name of the salesforce object field.<br/>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. Data that needs to be updated should start from row number 2.<br/>
                                 <div style="margin:10px 7%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                                     <img src="{!$Resource.csvformate}" />  
                                 </div><br/><br/>
                                 3. Make sure if you are using date field, it should be in MM/DD/YYYY format only.<br/><br/>
                                 4. Make sure if you are using Date/Time field, it should be in YYYY-MM-DDThh:mm:ss.SZ format only.<br/><br/>
-                                5. Make sure if you are using Date/Time field, it should be in hh:mm:ss format only.<br/><br/>
-                                6. Save file as CSV.<br/><br/>
+                                5. Make sure if you are using Time field, it should be in hh:mm:ss format only.<br/><br/>
+                                6. Save CSV/Excel files.<br/><br/>
                                 <br/>
                             </div>
                         </p>
@@ -46,12 +40,10 @@
                     </div>
                 </div>
             </lightning:tab>
-            
             <!--STEP 1 TAB 3-->
             <lightning:tab label="STEP 1">
-                
                 <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
-                    <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:upload" alternativeText="upload" title="upload" size="small"/>&nbsp;&nbsp;Upload CSV File</div>
+                    <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:upload" alternativeText="upload" title="upload" size="small"/>&nbsp;&nbsp;Upload File</div>
                 </div>
                 <div class="divStep">
                     <br/><br/>
@@ -64,9 +56,18 @@
                         </div>    
                         <br/><br/>
                         
-                        As you already have the CSV file ready with the records, which needs to be updated. <br/><br/>
+                        As you already have the CSV/Excel file ready with the records, which needs to be updated. <br/><br/>
                         <div style="margin-left: 5%;">
-                            1.  Click on the Upload Files button locate your file and click Select button.<br/><br/>
+                            1.  You have to first choose one operation Update or Insert as per the requirement.<br/><br/>
+                            
+                            <div style="text-align-last:center;padding-top:10px;">
+                                <img src="{!$Resource.page1_1_1}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
+                            </div>
+                        </div>
+                        <br/><br/>
+
+                        <div style="margin-left: 5%;">
+                            2.  Click on the Upload Files button locate your file and click Select button.<br/><br/>
                             
                             <div style="text-align-last:center;padding-top:10px;">
                                 <img src="{!$Resource.page1_2}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
@@ -76,7 +77,7 @@
                         After uploading the file, this is how it will look like. Your file name will be shown under the upload file button.<br/>
                         Now you need to select which object needs to be updated from this file. <br/><br/>
                         <div style="margin-left: 5%;">
-                            2. To select the object, click on Select Object pick-list field and locate your object inside it. You can also type the object name to search it.
+                            3. To select the object, click on Select Object pick-list field and locate your object inside it. You can also type the object name to search it.
                             <br/><br/>
                             <div style="text-align-last:center;padding-top:10px;">
                                 <img src="{!$Resource.page1_3}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
@@ -84,109 +85,225 @@
                         </div>
                         <br/><br/>
                         <div style="margin-left: 5%;">
-                            3. You have completed the first step here, Now click on next button to go to Fields Mapping tab.
+                            4. You have completed the first step here, Now click on next button to go to Fields Mapping tab.
                         </div>
                     </div>
                 </div>
             </lightning:tab>
 
-            <!--STEP 2 TAB 4-->
+            <!--STEP 2  TAB 4-->
             <lightning:tab label="STEP 2">
-                <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
-                    <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:contract_alt" alternativeText="contract_alt" title="contract_alt" size="small"/>&nbsp;&nbsp;Fields Mapping</div><br/>
+                <div class="UpdateSection">
+                    <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
+                        <div style="font-size:25px; color:#3c4ca3;">
+                            <lightning:icon iconName="utility:contract_alt" alternativeText="contract_alt" title="contract_alt"
+                            size="small" />&nbsp;&nbsp;A. Update Operation:
+                        </div>
+                    </div>
+                    <br /><br/><br />
+                    <div style="font-size:20px; color:#3c4ca3;">Fields Mapping</div><br />
+                    <div class="divStep">
+                        
+                        <div style="font-size:15px;margin-bottom:5%;">
+                            <div style="text-align: justify">
+                                You have now uploaded the data successfully into the Mass Update Application, now you need to create a criteria and map
+                                the fields with each other<br /><br />
+                            </div>
+                            <div style="font-size:20px; color:#3c4ca3;">Data matching criteria:</div><br />
+                            <div>
+                                <div style="text-align: justify">
+                                    Data matching will allow the system to create a criteria (A filteration) which will find the data from
+                                    the Salesforce using the uploaded file data. To match them follow the given steps.<br /><br />
+                                </div>
+                                <div style="text-align-last:center;padding-top:10px;">
+                                    <img src="{!$Resource.page2_1}"
+                                        style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                                </div><br /><br />
+                                <div style="margin-left: 5%;">
+                                    1. Under the "CSV/Excel Fields" column select the field(column) from CSV/Excel file.<br /><br />
+                                    2. Under the Salesforce selected object fields, select the field from the Salesforce which matches with
+                                    the CSV file field.<br /><br />
+                                    3. Make sure you create unique criteria.<br /><br />
+                                    4. You can also map more fields, by clicking add button from the top left corner.<br /><br />
+                                </div>
+                                TIP: If you map more fields from CSV to Salesforce, the data mapping will be more accurate.
+                            </div>
+                            <hr />
+                            <div style="font-size:20px; color:#3c4ca3;">How to map Fields:</div><br />
+                            <div>
+                                <div style="text-align: justify">
+                                    Mapping the fields will update the Salesforce fields from the CSV files. In other words whichever field
+                                    you map in salesforce from the CSV file, Salesforce data will be replaced by the CSV file data. Here is
+                                    how you can map them.<br /><br />
+                                </div>
+                                <div style="text-align-last:center;padding-top:10px;">
+                                    <img src="{!$Resource.page2_2}"
+                                        style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                                </div><br /><br />
+                                <div style="margin-left: 5%;">
+                                    1. Under the "CSV/Excel Fields" column select the column name. (It will be auto-populated if you wish to
+                                    change you can change them as well).<br /><br />
+                                    2. Under the "Salesforce fields" column select the fields you want to map with the CSV/Excel file.<br /><br />
+                                    3. We have mapped the First Name and Last Name fields.<br /><br />
+                                </div>
+                                NOTE: Here, you need to map all the fields from CSV/Excel to the Salesforce fields. If you leave any field blank
+                                it will give you an error, and will not let you move forward.
+                            </div>
+                            <hr />
+                            <div style="font-size:20px; color:#3c4ca3;">Prepare review data:</div>
+                            <br /><br />
+                            <div style="text-align: justify">
+                                You have now mapped all the required data, the next step will be the review part. You need to review the
+                                data Salesforce will fetch using the filtering. For review you need to select the fields which you want to
+                                see in order to check your data.
+                                So below table will show you all the fields available in the object.
+                            </div>
+                            <br /><br />
+                            <div style="text-align-last:center;padding-top:10px;">
+                                <img src="{!$Resource.page2_3}"
+                                    style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                            </div><br /><br />
+                            <div style="margin-left: 5%;">
+                                1. Select the required fields you want to see for the review.<br /><br />
+                                2. Id field will be shown if you select it or not.<br /><br />
+                                3. Click on the next button.<br /><br />
+                            </div>
+                            You have now completed all the steps from this part now you need to go for the review. Go to the Step 3 to move
+                            forward.
+                        </div>
+                    </div>
                 </div>
-                <div class="divStep">
-                    <br/><br/>
-                    <div style="font-size:15px;margin-bottom:5%;">
-                        <div style="text-align: justify">
-                            You have now uploaded the data successfully into the salesforce, now you need to create a criteria and map the fields with each other<br/><br/>
-                        </div>
-                        <div style="font-size:20px; color:#3c4ca3;">Data matching criteria:</div><br/>
-                        <div>
+                <!-- ENd of Update -->
+
+
+                <!-- Start of Insert Section -->
+                <div class="InsertSection">
+                    <div style="font-size:30px; color:#3c4ca3;"></div><br />
+
+                    <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
+                        <div style="font-size:25px; color:#3c4ca3;">
+                            <lightning:icon iconName="utility:contract_alt" alternativeText="contract_alt" title="contract_alt"
+                                size="small" />&nbsp;&nbsp;B. Insert Operation:
+                                
+                        </div><br />
+                    </div>
+                    <div class="divStep">
+                        <br /><br />
+                        <div style="font-size:15px;margin-bottom:5%;">
                             <div style="text-align: justify">
-                                Data matching will allow the system to create a criteria (A filteration) which will find the data from the Salesforce using the uploaded file data. To match them follow the given steps.<br/><br/>
+                                You have now uploaded the data successfully into the Mass Update Application, now you need to map
+                                the Excel fields with the salesforce fields.<br /><br />
                             </div>
-                            <div style="text-align-last:center;padding-top:10px;">
-                                <img src="{!$Resource.page2_1}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
-                            </div><br/><br/>
-                            <div style="margin-left: 5%;">
-                                1. Under the "CSV Fields" column select the field(column) from CSV file.<br/><br/>
-                                2. Under the Salesforce selected object fields, select the field from the Salesforce which matches with the CSV file field.<br/><br/>
-                                3. Make sure you create unique criteria.<br/><br/>
-                                4. You can also map more fields, by clicking add button from the top left corner.<br/><br/>
+                           
+                            <div style="font-size:20px; color:#3c4ca3;">How to map Fields:</div><br />
+                            <div>
+                                <div style="text-align: justify">
+                                    Mapping the fields will insert data in the Salesforce fields from the CSV/Excel files. In other words whichever field
+                                    you map in salesforce from the CSV/Excel file, records will be inserted by the CSV/Excel file data. Here is
+                                    how you can map them.<br /><br />
+                                </div>
+                                <div style="text-align-last:center;padding-top:10px;">
+                                    <img src="{!$Resource.page2_2}"
+                                        style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                                </div><br /><br />
+                                <div style="margin-left: 5%;">
+                                    1. Under the "CSV/Excel Fields" column select the column name. (It will be auto-populated if you wish to
+                                    change you can change them as well).<br /><br />
+                                    2. Under the "Salesforce fields" column select the fields you want to map with the CSV/Excel file.<br /><br />
+                                    3. We have mapped the First Name and Last Name fields.<br /><br />
+                                </div>
+                                NOTE: Here, you need to map all the fields from CSV/Excel to the Salesforce fields. If you leave any field blank
+                                it will give you an error, and will not let you move forward.
                             </div>
-                            TIP: If you map more fields from CSV to Salesforce, the data mapping will be more accurate.
+                            
+                            
+                            You have now completed all the steps from this part. Go to the Step 3 to move forward.
+            
                         </div>
-                        <hr/>
-                        <div style="font-size:20px; color:#3c4ca3;">How to map Fields:</div><br/>
-                        <div>
-                            <div style="text-align: justify">
-                                Mapping the fields will update the Salesforce fields from the CSV files. In other words whichever field you map in salesforce from the CSV file, Salesforce data will be replaced by the CSV file data. Here is how you can map them.<br/><br/>
-                            </div>
-                            <div style="text-align-last:center;padding-top:10px;">
-                                <img src="{!$Resource.page2_2}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
-                            </div><br/><br/>
-                            <div style="margin-left: 5%;">
-                                1. Under the "CSV Fields" column select the column name. (It will be auto-populated if you wish to change you can change them as well).<br/><br/>
-                                2. Under the "Salesforce fields" column select the fields you want to map with the CSV file.<br/><br/>
-                                3. We have mapped the First Name and Last Name fields.<br/><br/>
-                            </div>
-                            NOTE: Here, you need to map all the fields from CSV to the Salesforce fields. If you leave any field blank it will give you an error, and will not let you move forward.
-                        </div>
-                        <hr />
-                        <div style="font-size:20px; color:#3c4ca3;">Prepare review data:</div>
-                        <br/><br/>
-                        <div style="text-align: justify">
-                            You have now mapped all the required data, the next step will be the review part. You need to review the data Salesforce will fetch using the filtering. For review you need to select the fields which you want to see in order to check your data.
-                            So below table will show you all the fields available in the object.
-                        </div>
-                        <br/><br/> 
-                        <div style="text-align-last:center;padding-top:10px;">
-                            <img src="{!$Resource.page2_3}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
-                        </div><br/><br/>
-                        <div style="margin-left: 5%;">
-                            1. Select the required fields you want to see for the review.<br/><br/>
-                            2. Id field will be shown if you select it or not.<br/><br/>
-                            3. Click on the next button.<br/><br/>
-                        </div>
-                        You have now completed all the steps from this part now you need to go for the review. Go to the Step 3 to move forward.
                     </div>
                 </div>
             </lightning:tab>
+
+
             
             <!--STEP 3 TAB 5-->
             <lightning:tab label="STEP 3">
-                
-                <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
-                    <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:preview" alternativeText="preview" title="preview" size="small"/>&nbsp;&nbsp;Review your Data:</div><br/>
-                </div>
-                <div class="divStep">
-                    <br/><br/>
-                    <div style="font-size:15px;margin-bottom:5%;">
-                        You have completed all the necessory steps for updating the records. Now you need to check your data before we start updating them. <br/><br/>
-                        <div style="text-align-last:center;padding-top:10px;">
-                            <img src="{!$Resource.page3_1}" style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"/>  
-                        </div><br/><br/>
-                        <div style="text-align: justify">
-                            This is how your page will look like. It has all the data which will be updated. Now you need follow some steps before Updating.<br/><br/>
-                        </div>
-                        <div style="margin-left: 5%;">
-                            1. Make sure your data exactly matched with each other.<br/><br/>
-                            2. Blue columns are showing data from the Salesforce and Pink columns are showing the CSV Fields. (In the Image)<br/><br/>
-                            3. If your data are not correctly mapped click on the "Previous" button and map the fields correctly.<br/><br/>
-                            4. Now if your data looks correct to you. Click on the "Update" button.<br/><br/>
-                        </div>
-                        <div style="text-align: justify">
-                            Congratulations, you have completed all the necessory steps to update the data. Click on "Review" tab for other instruction.
+                <div class="updateSection3rd">
+
+                    <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
+                        <div style="font-size:25px; color:#3c4ca3;">
+                            <!-- <lightning:icon iconName="utility:preview" alternativeText="preview" title="preview" size="small" /> -->
+                        <lightning:icon iconName="utility:contract_alt" alternativeText="contract_alt" title="contract_alt" size="small" /> &nbsp;&nbsp;A. Update Operation:
                         </div>
                     </div>
-                </div> 
+                    <br /><br />
+                    <div style="font-size:20px; color:#3c4ca3;">Review your Data:</div><br />
+
+                    <div class="divStep">
+                        
+                        <div style="font-size:15px;margin-bottom:5%;">
+                            You have completed all the necessory steps for updating the records. Now you need to check your data before we
+                            start updating them. <br /><br />
+                            <div style="text-align-last:center;padding-top:10px;">
+                                <img src="{!$Resource.page3_1}"
+                                    style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                            </div><br /><br />
+                            <div style="text-align: justify">
+                                This is how your page will look like. It has all the data which will be updated. Now you need follow some
+                                steps before Updating.<br /><br />
+                            </div>
+                            <div style="margin-left: 5%;">
+                                1. Make sure your data exactly matched with each other.<br /><br />
+                                2. Blue columns are showing data from the Salesforce and Pink columns are showing the CSV Fields. (In the
+                                Image)<br /><br />
+                                3. If your data are not correctly mapped click on the "Previous" button and map the fields
+                                correctly.<br /><br />
+                                4. Now if your data looks correct to you. Click on the "Update" button.<br /><br />
+                            </div>
+                            <div style="text-align: justify">
+                                Congratulations, you have completed all the necessory steps to update the data. Click on "Review" tab for
+                                other instruction.
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+
+                <!-- Insert section 3rd Page -->
+                <div class="InsertSection3rd">
+                    <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
+                        <div style="font-size:25px; color:#3c4ca3;">
+                            <!-- <lightning:icon iconName="utility:preview" alternativeText="preview" title="preview" size="small" /> -->
+                        <lightning:icon iconName="utility:contract_alt" alternativeText="contract_alt" title="contract_alt" size="small" /> &nbsp;&nbsp;B. Insert Operation
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div style="font-size:20px; color:#3c4ca3;">Review your Data:</div><br />
+                    <div class="divStep">
+                        
+                        <div style="font-size:15px;margin-bottom:5%;">
+                            You have completed all the necessory steps for inserting the records. Now you need to check your data before we
+                            start inserting them in Salesforce. <br /><br />
+                            <div style="text-align-last:center;padding-top:10px;">
+                                <img src="{!$Resource.page3_1_1}"
+                                    style="max-width: 90%;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" />
+                            </div><br /><br />
+                            <div style="text-align: justify">
+                                This is how your page will look like. It has all the data which will be inserted. <br /><br />
+                            </div>
+                            
+                            <div style="text-align: justify">
+                                Congratulations, you have completed all the necessory steps to insert the data. Click on "Review" tab for
+                                other instruction.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 
             </lightning:tab>
             
             <!--AFTER UPDATING THE DATA TAB 6-->
             <lightning:tab label="REVIEW">
-                
-                
                 <div class="slds-card" style="height: 65px; padding: 12px; background: #f3f2f2;">
                     <div style="font-size:25px; color:#3c4ca3;"><lightning:icon iconName="utility:record_update" alternativeText="record_update" title="record_update" size="small"/>&nbsp;&nbsp;Data update report</div><br/>
                 </div>
@@ -194,7 +311,7 @@
                     <br/><br/>
                     <div style="font-size:15px;margin-bottom:5%;">
                         <div>
-                            After pressing the update button, the system will update your data. Once the update process is finished an email will be sent to your registered email, where you can download your Success and Error files. Also, you can find them inside &nbsp;<b>Files / Libraries / Mass Update.</b>
+                            After pressing the Update/Insert button, the system will Update/Insert your data. Once the process is finished an email will be sent to your registered email, where you can download your Success and Error files. Also, you can find them inside &nbsp;<b>Files / Libraries / Mass Update.</b>
                             <br/>Verify your data. And your work finishes over here. :)
                             <br/><br/><br/>
                             Mass update has some limitations as well, check them in the Limitations tab before you start updating your records.
@@ -211,10 +328,8 @@
                 <div class="divStep">
                     <br/><br/>
                     <div style="font-size:15px;margin-bottom:5%;">
-                        1. Mass Update do not support DateTime or Time data type to update.<br/><br/>
-                        2. Data updating limit is 2000 records per update.<br/><br/>
-                        3. It does not support other file format except CSV files.<br/><br/>
-                        4. This all limitations will be removed in the future updates.
+                        1. Data operation limit is 8000 records per Update/Insert.(It depends on the number of cell)<br/><br/>
+                        2. It only supports .csv, .xls, .xlsx files only.<br/><br/>
                     </div>
                 </div>
             </lightning:tab>

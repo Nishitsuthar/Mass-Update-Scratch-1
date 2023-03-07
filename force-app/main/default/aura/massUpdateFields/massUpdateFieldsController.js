@@ -10,7 +10,7 @@
 
     },
     onblurMethod: function (component, event, helper) {
-        component.set("v.listOfSearchRecords", null);
+        // component.set("v.listOfSearchRecords", null);
         var forclose = component.find("searchRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');

@@ -245,7 +245,7 @@
                         <table class="slds-table slds-table_cell-buffer slds-table_bordered">
                             <thead>
                                 <tr>
-                                    <th>CSV Fields</th>
+                                    <th>CSV/Excel Fields</th>
                                     <th><div class="slds-align_absolute-center">Operator</div></th>
                                     <th>
                                         <div class="slds-grid slds-gutters">
@@ -296,7 +296,7 @@
                         <br/><br/>
                          
                         <!--Mapp Fileds-->
-                        <h1 style="font-size:18px"><b>CSV &amp; Salesforce Field Mapping:</b> 
+                        <h1 style="font-size:18px"><b>Field Mapping:</b> 
                             <aura:if isTrue="{!greaterthan(v.header.length,v.FieldToUpdateList.length)}">
                                 <div class="slds-float_right">Add MapFields&nbsp;&nbsp;
                                     <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addMapRow}"/>
@@ -308,7 +308,7 @@
                         <table class="slds-table slds-table_cell-buffer slds-table_bordered">
                             <thead>
                                 <tr>
-                                    <th>CSV Fields</th>
+                                    <th>CSV/Excel Fields</th>
                                     <th>Salesforce Fields</th>
                                     <th></th>
                                 </tr>
@@ -453,7 +453,7 @@
                                          <!-- {!v.currentStep} -->
                     <div class="slds-clearfix">
                         <div class="slds-page-header" role="banner">
-                            <div class="slds-float_left" style="display:inline-block;">   
+                            <div class="slds-float_left button-css" style="display:inline-block;">   
                            		<p class="slds-page-header__title">Page {!v.pageNumber} | Showing records from {! ((v.pageNumber-1)*v.pageSize+1)+' to '+(v.isLastPage == false ? ((v.pageNumber)*v.pageSize) : v.dataSize)} out of {!v.dataSize}</p>
                             </div>
                             <div style="display:inline-block;margin:0 10%;">
@@ -463,7 +463,7 @@
                                 <lightning:button label="Next" iconName="utility:chevronright" iconPosition="right"
                                                   disabled="{! v.isLastPage}" onclick="{!c.nextPageRecord}"/>
                             </div>                            
-                            <div class="slds-float_right" style="display:inline-block;">      
+                            <div class="slds-float_right button-css" style="display:inline-block;">      
                                 <lightning:button variant="brand" value="{!v.currentStep}" label="Previous" title="Previous" onclick="{! c.PreviousStep2 }" /> 
                                 <aura:if isTrue="{!greaterthan(v.sfId,0)}">
                                     <lightning:button disabled="{!v.stepOneNextButton}" variant="brand" value="{!v.currentStep}" label="Update" title="Update" onclick="{! c.saveRecordsToSF }"/>
