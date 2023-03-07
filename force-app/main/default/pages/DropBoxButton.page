@@ -20,7 +20,22 @@
                                 .then(data => {
                                     // Handle the file data
                                     console.log('data as text ' + data);
-                                    messageSendLWC(nameFile, data);
+                                    // return (nameFile, data);
+                                    var data = "Some data";
+
+                                    // var newTag = document.createElement('p');
+                                    var newTag = document.querySelector('div');
+
+                                    newTag.innerText = 'This is a new tag!';
+                                    console.log('newTage Data==>', newTag);
+
+                                    // Get a reference to an existing element on the page
+                                    // Add the new tag to the existing element
+                                    document.body.appendChild(newTag);
+
+                                    // getDataAndSendToLWC();
+
+                                    // messageSendLWC(nameFile, data);
                                 })
                                 .catch(error => {
                                     // An error occurred while getting the file data
@@ -58,12 +73,15 @@
                 console.log('message::' + JSON.stringify(message));
                 parent.postMessage(message, lexOrigin)
             }
+
         </script>
     </head>
 
     <body style="margin:0;">
-        <apex:image url="{!$Resource.dropbox}" onclick="chooseFile();" height="28px" width="30px" style="border:none; cursor: pointer;
+        <apex:image url="{!$Resource.dropbox}" onclick="chooseFile();" id="myExistingElement" height="28px" width="30px" style="border:none; cursor: pointer;
 " />
+        <!-- <div class="newId"></div> -->
+        <div class="newId">Hello</div>
     </body>
 
     </html>

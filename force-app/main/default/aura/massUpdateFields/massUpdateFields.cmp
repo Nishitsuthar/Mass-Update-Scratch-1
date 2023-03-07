@@ -12,11 +12,11 @@
     <aura:attribute name="ObjectListMain" type="List" />
     <aura:attribute name="isSelectAll" type="boolean" default="false"/>
     <aura:attribute name="visibileInputBox" type="Boolean" default="false" />
-    <aura:attribute name="visibileButton" type="Boolean" default="true" />
-    <aura:attribute name="srno" type="Integer" />
+    <!-- <aura:attribute name="visibileButton" type="Boolean" default="true" /> -->
+    <!-- <aura:attribute name="srno" type="Integer" /> -->
     <aura:attribute name="currentStep" type="String" default="Step1" />  
     <aura:attribute name="finished" type="Boolean" default="false" />
-    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    <!-- <aura:attribute name="showSpinner" type="Boolean" default="false" /> -->
     <aura:attribute name="tabledata" type="object[]" />
     <aura:attribute name="header" type="object[]" />
 
@@ -37,17 +37,17 @@
     <aura:attribute name="fieldTypeObj" type="object"/>
      <!--* Nishi Suthar 28/02/2023  -->
 
-    <aura:attribute name="allDataList" type="object[]" />
-    <aura:attribute name="addDeleteBoolean" type="boolean"  default="false"/>
+    <!-- <aura:attribute name="allDataList" type="object[]" /> -->
+    <!-- <aura:attribute name="addDeleteBoolean" type="boolean"  default="false"/> -->
     <aura:attribute name="tableListData" type="List"/>
-    <aura:attribute name="selectedFields" type="List"/>
+    <!-- <aura:attribute name="selectedFields" type="List"/> -->
     <aura:attribute name="ResultOfAllData" type="List"/>    
     <aura:attribute name="TableLightningData" type="List"/>
     <aura:attribute name="FieldToUpdateList" type="List"/>
     <aura:attribute name="updateFieldList" type="String" />
     <aura:attribute name="IsSpinner" type="Boolean" default="true"/>
     <aura:attribute name="sfId" type="Integer"/>
-    <aura:attribute name="EmailId" type="String" default="Email" />  
+    <!-- <aura:attribute name="EmailId" type="String" default="Email" />   -->
     <aura:attribute name="pageNumber" type="Integer" default="1"/>
     <aura:attribute name="pageSize" type="Integer" default="50"/>
     <aura:attribute name="totalPage" type="Integer" default="0"/>
@@ -119,21 +119,6 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <!-- End of Progress Bar -->
-                                        <!-- <div class="slds-align_absolute-center" style="height: 5rem;">
-                                        <lightning:button onclick="{!c.changePath}" label="Update Path"/>
-                                        </div> -->
-
-
-
-
-
-
-                                        <!-- <lightning:progressIndicator  aura:id="path" currentStep="{!v.currentStep}" type="path" variant="base">
-                                            <lightning:progressStep label="Drag And Drop CSV File" value="Step1"/>  
-                                            <lightning:progressStep label="Fields Mapping" value="Step2" />
-                                            <lightning:progressStep label="Update Fields" value="Step3" />
-                                        </lightning:progressIndicator>  -->
                                     </div>
                                 </div>
                             </div>
@@ -172,30 +157,15 @@
                     <lightning:spinner variant="brand"  size="large" />
                 </aura:if> 
                 <lightning:card>
-                    <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
+                    <div onmouseleave="{!c.onblurMethod}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
                         <div class="slds-float_right" style="margin-right:1%">
                             <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
-                                   <!-- <a>Help?<c:quickBot/></a> -->
                                    <a onclick="{!c.openLWC}">Help?</a>
-                                   <!-- <a onclick="{!c.handleButtonClick}">Help?</a>
-                                   <aura:html tag="div" aura:id="lwcContainer" /> -->
                                    <aura:if isTrue="{!v.inputValue == true}">
                                    <c:quickBot onvaluechange="{!c.getValueFromLwc}"/><br/>
                                    </aura:if>
                             </div>
                             <br/>
-                            <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
-                                <!-- <br/> -->
-                                <!-- <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog"> -->
-                                    
-                                    <!-- <header class="slds-popover__header">
-                                    <h2 class="slds-text-heading_small" id="dialog-heading-id-106">Help</h2>
-                                    </header> -->
-                                    <!-- <div class="slds-popover__body" id="dialog-body-id-101"> -->
-                                    <!-- <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p> -->
-                                    <!-- </div> -->
-                                <!-- </section> -->
-                            <!-- </aura:if> -->
                         </div>
                         <div class="slds-p-around_medium" style="width:70%;margin-left:15%;">
                             
@@ -203,7 +173,7 @@
                             <div class="slds-float_right slds-col">
                                 <lightning:helptext content="Select your Operation."/>
                             </div>
-                            <lightning:select aura:id="select" name="select" label="Select a operation:" value="{!v.operation}" onchange="{! c.onChange }">
+                            <lightning:select aura:id="select" name="select" label="Select a operation:" value="{!v.operation}" onchange="{! c.onChangeOperation }">
                                 <!-- required="true" -->
                                         <option value="">choose one...</option>
                                         <option value="insert">insert</option>
@@ -213,15 +183,6 @@
 
                             <!--* Nishit Suthar 20/02/23 : Added new LWC Component -->
                             <c:new_upload_btn onfilevalue="{!c.handlefileValue}" fileName="{!v.fileName}" progress='{!v.progress}' onpassvalue="{!c.handleNextButton}" onheader="{!c.handleHeader}" ontabledata="{!c.handleTableData}"/>
-                            
-                             <!-- jenish gangani 8/2/23  -->
-                            <!-- <c:importCsvFile   header="{!v.header}" tabledata="{!v.tabledata}"  progress="{!v.progress}" fileName ="{!v.fileName}"/> -->
-                            <!-- <lightning:fileUpload aura:id = "file"
-                                    onuploadfinished="{!c.showcsvdata}"
-                                    name = "file"
-                                    accept = ".csv"
-                                    label = "Please upload file"
-                                    multiple = "false" /> -->
                                  
                             <br/>
                             
@@ -238,16 +199,6 @@
                             </div>
                             <div class="slds-clearfix slds-grid slds-gutter">
                                 <div class="slds-align-left slds-col">
-                                    <!-- <aura:if isTrue="{!v.selectObjectHelp}">
-                                        <div class="slds-box slds-theme_shade slds-theme_alert-texture">
-                                            If you do not see the object you want to update, is because you do not have the permission to update the object record! Please contact your system administrator.
-                                        </div>
-                                        <aura:set attribute="else">
-                                            <div onclick="{!c.showSelectObjectHelp}">
-                                                <a>Can not see an Object to update?</a>
-                                            </div>
-                                        </aura:set>
-                                    </aura:if> -->
                                 </div>
                             </div>
                             <!-- {!v.currentStep} -->
@@ -269,25 +220,12 @@
                         <div class="slds-float_right" onclick="{!c.showSelectObjectHelp}">
                             <!-- <a>Help?</a> -->
                             <a onclick="{!c.openLWC}">Help?</a>
-                            <!-- <a onclick="{!c.handleButtonClick}">Help?</a>
-                            <aura:html tag="div" aura:id="lwcContainer" /> -->
                             <aura:if isTrue="{!v.inputValue == true}">
                             <c:quickBot onvaluechange="{!c.getValueFromLwc}"/><br/>
                             </aura:if>
                         </div>
                         <br/>
-                        <!-- <aura:if isTrue="{!v.selectObjectHelp}"> -->
-                            <!-- <br/> -->
-                            <!-- <section aria-describedby="dialog-body-id-101" aria-labelledby="dialog-heading-id-106" class="slds-popover slds-nubbin_top-right slds-popover_small" role="dialog"> -->
-                                
-                                <!-- <header class="slds-popover__header">
-                                <h2 class="slds-text-heading_small" id="dialog-heading-id-106">Help</h2>
-                                </header> -->
-                                <!-- <div class="slds-popover__body" id="dialog-body-id-101"> -->
-                                <!-- <p>If you can't see Object(s) or Field(s) to Update. Please contact your System Administrator.</p> -->
-                                <!-- </div> -->
-                            <!-- </section> -->
-                        <!-- </aura:if> -->
+
                     </div>
 
                     <!-- 8/2/23   jenish ganagani -->
@@ -351,16 +289,7 @@
                         </aura:if>       
                         <div class="slds-clearfix slds-grid slds-gutter">
                             <div class="slds-align-left slds-col">
-                                <!-- <aura:if isTrue="{!v.SelectFieldHelp}">
-                                    <div class="slds-box slds-theme_shade slds-theme_alert-texture">
-                                        If you do not see the field you want to update, is because you do not have the permission to update the field! Please contact your system administrator.
-                                    </div>
-                                    <aura:set attribute="else">
-                                        <div onclick="{!c.showSelectFieldHelp}">
-                                            <a>Can not see Field(s) to update?</a>
-                                        </div>
-                                    </aura:set>
-                                </aura:if> -->
+    
                             </div> 
                         </div>
                        

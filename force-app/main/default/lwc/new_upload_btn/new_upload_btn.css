@@ -4,3 +4,8 @@
     margin-left: 15px;
     cursor: pointer;
 }
+
+.new_button_class {
+    display: flex;
+    align-items: center;
+}

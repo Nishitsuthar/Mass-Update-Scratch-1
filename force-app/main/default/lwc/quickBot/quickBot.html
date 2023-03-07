@@ -43,12 +43,18 @@
                         <div class="Wel_message">
                         <!-- <div class="form"> -->
                             <lightning-input type="text" placeholder="Enter Your Name" label="Name" value={quickbotname} onchange={Quickbot_name} class="quickbot_input" required></lightning-input>
+                            <div class="email_error_msg" if:false={name_msg}>Please Enter Valid Name
+                                Details..!</div>
                             <lightning-input type="text" label="Email" placeholder="Enter Your Email" value={quickbotemail} onchange={Quickbot_email} class="quickbot_input" required></lightning-input>
                             <div class="email_error_msg" if:false={email_msg}>Please Enter Valid Email
                                 Details..!</div>
 
                             <lightning-input type="text" label="Subject" placeholder="Enter Your Subject" value={quickbotsubject} onchange={Quickbot_subject} class="quickbot_input" required></lightning-input>
+                            <div class="email_error_msg" if:false={subject_msg}>Please Enter Valid Subject
+                                Details..!</div>
                             <lightning-textarea label="Message" placeholder="Enter your Message" value={quickbotmessage} onchange={Quickbot_message} class="quickbot_message" required></lightning-textarea>
+                            <div class="email_error_msg" if:false={Message_msg}>Please Enter Valid Message
+                                Details..!</div>
                             <!-- <textarea label="Message" placeholder="Enter your message here" value={quickbotmessage} onchange={Quickbot_message} class="quickbot_message"></textarea> -->
                             <div class="quickbot_button" onclick={quickbot_Submit}><span>Submit</span></div>
                         </div>

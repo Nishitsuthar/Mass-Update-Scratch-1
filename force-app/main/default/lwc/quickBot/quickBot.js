@@ -24,6 +24,10 @@ export default class QuickBot extends LightningElement {
     quickbotmessage;
     quickbotsubject;
     email_msg = true;
+    name_msg = true;
+    subject_msg = true;
+    Message_msg = true;
+
     // header = quickbotheader;
     get bgimg() {
         return `background-image:url(${QuickBotBody});background-repeat: no-repeat; background-size: cover;`;
@@ -41,49 +45,58 @@ export default class QuickBot extends LightningElement {
     }
 
     renderedCallback() {
-        // console.log('print to list',this.listto);
         Promise.all([
             loadStyle(this, QuickBotCSS)
         ]).then(() => {
-            console.log('check');
         })
             .catch(error => {
-                // console.log( error.body.message );
             });
     }
     Quickbot_name(event) {
-        // console.log(event.target.value);
         this.quickbotname = event.target.value;
+       this.name_msg = true;
     }
     Quickbot_email(event) {
-        // console.log(event.target.value);
         this.quickbotemail = event.target.value;
+        this.email_msg = true;
     }
     Quickbot_message(event) {
-        // console.log(event.target.value);
         this.quickbotmessage = event.target.value;
+        this.Message_msg = true;
+
     }
     Quickbot_subject(event) {
         this.quickbotsubject = event.target.value;
+        this.subject_msg = true;
+
     }
     emailsend;
     quickbot_Submit() {
         var pattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         var validation = pattern.test(this.quickbotemail);
+        console.log(this.quickbotname);
+        console.log(this.quickbotemail);
+        console.log(this.quickbotmessage);
+        console.log(this.quickbotsubject);
 
-        if (validation == false) {
-            console.log('validation', validation);
-            this.email_msg = false;
-            console.log('validation', validation);
+        if(this.quickbotname == undefined){
+            this.name_msg = false;
         }
-        else {
+         else if (validation == false) {
+            this.email_msg = false;
+        }else if(this.quickbotsubject == undefined){
+            this.subject_msg = false;
+        }
+      else if(this.quickbotmessage == undefined){
+            this.Message_msg = false;
+        }  else {
             console.log('validation', validation);
             this.email_msg = true;
             console.log('selectedValues:- ', this.quickbotemail);
             console.log('selectedValues:- ' + typeof this.quickbotemail);
             const value = false;
             const valueChangeEvent = new CustomEvent("valuechange", {
-              detail: { value }
+                detail: { value }
             });
             // Fire the custom event
             this.dispatchEvent(valueChangeEvent);
@@ -110,7 +123,7 @@ export default class QuickBot extends LightningElement {
         this.showComponent = !this.showComponent;
         const value = false;
         const valueChangeEvent = new CustomEvent("valuechange", {
-          detail: { value }
+            detail: { value }
         });
         // Fire the custom event
         this.dispatchEvent(valueChangeEvent);

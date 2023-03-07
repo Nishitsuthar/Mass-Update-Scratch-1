@@ -35,7 +35,9 @@
                                     <img src="{!$Resource.csvformate}" />  
                                 </div><br/><br/>
                                 3. Make sure if you are using date field, it should be in MM/DD/YYYY format only.<br/><br/>
-                                4. Save file as CSV.<br/><br/>
+                                4. Make sure if you are using Date/Time field, it should be in YYYY-MM-DDThh:mm:ss.SZ format only.<br/><br/>
+                                5. Make sure if you are using Date/Time field, it should be in hh:mm:ss format only.<br/><br/>
+                                6. Save file as CSV.<br/><br/>
                                 <br/>
                             </div>
                         </p>

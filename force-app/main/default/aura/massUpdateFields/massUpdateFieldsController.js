@@ -1,5 +1,5 @@
 ({
-    onChange: function (component, event, helper) {
+    onChangeOperation: function (component, event, helper) {
         component.set("v.operation", component.find('select').get('v.value'));
     },
     doinit: function (component, event, helper) {
@@ -8,9 +8,8 @@
         helper.getUserEmail(component, event, helper);
         component.set("v.IsSpinner", false);
 
-        console.log('object main====>' + component.get("v.ObjectListMain"));
     },
-    onblur: function (component, event, helper) {
+    onblurMethod: function (component, event, helper) {
         component.set("v.listOfSearchRecords", null);
         var forclose = component.find("searchRes");
         $A.util.addClass(forclose, 'slds-is-close');
@@ -23,9 +22,9 @@
     },
 
     // This function call when the end User Select any record from the result list.   
-    handleComponentEvent: function (component, event, helper) {
-        helper.handleComponentEvent(component, event, helper);
-    },
+    // handleComponentEvent: function (component, event, helper) {
+    //     helper.handleComponentEvent(component, event, helper);
+    // },
 
     onChangeObject: function (component, event, helper) {
         helper.onChangeObject(component, event, helper);
@@ -39,43 +38,42 @@
         helper.onSelectAllChange(component, event, helper);
     },
 
-    dragAndDropBar: function (component, event, helper) {
-        var selectedStep2 = event.getSource().get("v.value");
-        var nextStep = 'Step1';
+    // dragAndDropBar: function (component, event, helper) {
+    //     var selectedStep2 = event.getSource().get("v.value");
+    //     var nextStep = 'Step1';
 
-        if (nextStep == 'finished') {
-            component.set("v.finished", nextStep);
-        } else {
-            component.set("v.currentStep", nextStep);
-        }
-    },
+    //     if (nextStep == 'finished') {
+    //         component.set("v.finished", nextStep);
+    //     } else {
+    //         component.set("v.currentStep", nextStep);
+    //     }
+    // },
 
-    mapFieldBar: function (component, event, helper) {
-        var selectedStep2 = event.getSource().get("v.value");
-        var nextStep = 'Step2';
+    // mapFieldBar: function (component, event, helper) {
+    //     var selectedStep2 = event.getSource().get("v.value");
+    //     var nextStep = 'Step2';
 
-        if (nextStep == 'finished') {
-            component.set("v.finished", nextStep);
-        } else {
-            component.set("v.currentStep", nextStep);
-        }
-    },
+    //     if (nextStep == 'finished') {
+    //         component.set("v.finished", nextStep);
+    //     } else {
+    //         component.set("v.currentStep", nextStep);
+    //     }
+    // },
 
-    updateFieldBar: function (component, event, helper) {
-        var selectedStep3 = event.getSource().get("v.value");
-        var nextStep = 'Step3';
+    // updateFieldBar: function (component, event, helper) {
+    //     var selectedStep3 = event.getSource().get("v.value");
+    //     var nextStep = 'Step3';
 
-        if (nextStep == 'finished') {
-            component.set("v.finished", nextStep);
-        } else {
-            component.set("v.currentStep", nextStep);
-        }
-    },
+    //     if (nextStep == 'finished') {
+    //         component.set("v.finished", nextStep);
+    //     } else {
+    //         component.set("v.currentStep", nextStep);
+    //     }
+    // },
 
     previousClikButton: function (component, event, helper) {
         console.log('previousClikButton');
         var selectedStep = event.getSource().get("v.value");
-        console.log('selectstep=====' + selectedStep);
         // -----------------------------jenish gangani 8/2/23
         var toggleIndicatorNext = component.find("step2Indicator");
         $A.util.addClass(toggleIndicatorNext, 'slds-tabs--path__item slds-is-incomplete');
@@ -89,21 +87,13 @@
         // -----------------------------jenish gangani 8/2/23
         var nextStep = selectedStep == 'Step2' ? 'Step1' : 'finished';
         component.set("v.progress", '100');
-        console.log('file name==>' + component.get('v.fileName'));
-
         // component.set("v.fileName", '100');
 
 
         if (nextStep == 'finished') {
             component.set("v.finished", nextStep);
         } else {
-            // --------------------------------------------------------- jenish gangani
-            // $A.get('e.force:refreshView').fire();
-            // let lastname = sessionStorage.getItem('key');
-            // console.log('lastnammeata:::' + lastname);
-            // csv
             helper.deleteRowRecord(component, event, helper);
-            // --------------------------------------------------------- jenish gangani
             component.set("v.currentStep", nextStep);
 
         }
@@ -155,25 +145,17 @@
 
         console.log('next Button called');
         var validateSelect;
-        console.log('value of second Button for the:::::' + component.find("selectDropValues"));
         if (component.find("selectDropValues") != undefined) {
             validateSelect = component.find("selectDropValues").reduce(function (validSoFar, inputCmp) {
-                console.log('validSsofar -- > ', validSoFar);
-                console.log('inputCmp -- > ', { inputCmp });
-
                 inputCmp.showHelpMessageIfInvalid();
                 return validSoFar && inputCmp.get('v.validity').valid;
             }, true);
         }
-        console.log('validateSelect::::' + validateSelect);
 
         var tablePushDataList = component.get('v.tableListData');
         // ----------------------------------------jenish gangani 9/2
-        console.log('tablePushDataList:::' + JSON.stringify(tablePushDataList));
-        console.log('tablePushDataList length:::' + (tablePushDataList.length));
         var sfPushData = component.get('v.FieldToUpdateList');
-        console.log('sfPushData:::' + JSON.stringify(sfPushData));
-        console.log('sfPushData length:::' + (sfPushData.length));
+
         // ----------------------------------------jenish gangani 9/2
 
         // ------------------------------jenish gangani 7/2  to change the progressbar movement
@@ -199,12 +181,11 @@
             helper.showToast(component, "Error", "Error!", "Please Select All Fields");
         } else if (validateSelect) {
             var selectedStep = event.getSource().get("v.value");
-            console.log('selecteStep::::' + selectedStep);
 
             var nextStep = selectedStep == 'Step2' ? 'Step3' : 'finished';
             // ------------ jenish gangani  get the opration value 
             var operation = component.get('v.operation');
-            console.log('operation value::::' + operation);
+
             // ------------ jenish gangani  get the opration value 
 
             if (nextStep == 'finished') {
@@ -277,7 +258,6 @@
 
 
     handleNextButton: function (component, event, helper) {
-        console.log('nextButton==>' + event.getParam('value'));
         component.set("v.stepOneNextButton", event.getParam('value'));
     },
     handleHeader: function (component, event, helper) {
